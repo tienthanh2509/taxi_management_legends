@@ -1,0 +1,214 @@
+{# Master Page #}
+{% extends 'system/admin_master_page.html' %}
+
+{% block head %}{{ parent() }}
+<!-- MetisMenu CSS -->
+<link href="{{ base_url('vendor/bower/metisMenu/dist/metisMenu.min.css') }}" rel="stylesheet">
+<link href="{{ base_url('assets/css/sb-admin-2.css') }}" rel="stylesheet">
+<link href="{{ base_url('vendor/bower/morris.js/morris.css') }}" rel="stylesheet">
+<link href="{{ base_url('assets/css/style.css') }}" rel="stylesheet">
+{% endblock %}
+
+{# Phần đầu trang #}
+{% block body_head %}{% include 'layout/admin_body_head.html' %}{% endblock %}
+
+{# Nội dung trang #}
+{% block body_content %}
+<div id="page-wrapper">
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">Dashboard</h1>
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+	<!-- /.row -->
+	<div class="row">
+		<div class="col-lg-3 col-md-6">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<div class="row">
+						<div class="col-xs-3">
+							<i class="fa fa-comments fa-5x"></i>
+						</div>
+						<div class="col-xs-9 text-right">
+							<div class="huge">26</div>
+							<div>New Comments!</div>
+						</div>
+					</div>
+				</div>
+				<a href="#">
+					<div class="panel-footer">
+						<span class="pull-left">View Details</span>
+						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+						<div class="clearfix"></div>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-6">
+			<div class="panel panel-green">
+				<div class="panel-heading">
+					<div class="row">
+						<div class="col-xs-3">
+							<i class="fa fa-tasks fa-5x"></i>
+						</div>
+						<div class="col-xs-9 text-right">
+							<div class="huge">12</div>
+							<div>New Tasks!</div>
+						</div>
+					</div>
+				</div>
+				<a href="#">
+					<div class="panel-footer">
+						<span class="pull-left">View Details</span>
+						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+						<div class="clearfix"></div>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-6">
+			<div class="panel panel-yellow">
+				<div class="panel-heading">
+					<div class="row">
+						<div class="col-xs-3">
+							<i class="fa fa-shopping-cart fa-5x"></i>
+						</div>
+						<div class="col-xs-9 text-right">
+							<div class="huge">124</div>
+							<div>New Orders!</div>
+						</div>
+					</div>
+				</div>
+				<a href="#">
+					<div class="panel-footer">
+						<span class="pull-left">View Details</span>
+						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+						<div class="clearfix"></div>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-6">
+			<div class="panel panel-red">
+				<div class="panel-heading">
+					<div class="row">
+						<div class="col-xs-3">
+							<i class="fa fa-support fa-5x"></i>
+						</div>
+						<div class="col-xs-9 text-right">
+							<div class="huge">13</div>
+							<div>Support Tickets!</div>
+						</div>
+					</div>
+				</div>
+				<a href="#">
+					<div class="panel-footer">
+						<span class="pull-left">View Details</span>
+						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+						<div class="clearfix"></div>
+					</div>
+				</a>
+			</div>
+		</div>
+	</div>
+	<!-- /.row -->
+	<div class="row">
+		<div class="col-lg-8">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i class="fa fa-bar-chart-o fa-fw"></i> Doanh thu theo háng
+				</div>
+				<!-- /.panel-heading -->
+				<div class="panel-body">
+					<div id="morris-line-chart"></div>
+				</div>
+				<!-- /.panel-body -->
+			</div>
+			<!-- /.panel -->
+		</div>
+		<!-- /.col-lg-8 -->
+		<div class="col-lg-4">
+
+		</div>
+		<!-- /.col-lg-4 -->
+	</div>
+	<!-- /.row -->
+</div>
+<!-- /#page-wrapper -->
+{% endblock %}
+
+{# Phần chân trang #}
+{% block body_footer %}{% include 'layout/admin_body_footer.html' %}{% endblock %}
+
+{% block footer %}{{ parent() }}
+<!-- Metis Menu Plugin JavaScript -->
+<script src="vendor/bower/metisMenu/dist/metisMenu.min.js"></script>
+<script src="{{ base_url('assets/js/sb-admin-2.js') }}"></script>
+<script src="vendor/bower/raphael/raphael-min.js"></script>
+<script src="vendor/bower/morris.js/morris.min.js"></script>
+
+<script>
+    Morris.Line({
+        element: 'morris-line-chart',
+        data: [{
+            period: '2010 Q1',
+            iphone: 2666,
+            ipad: null,
+            itouch: 2647
+        }, {
+            period: '2010 Q2',
+            iphone: 2778,
+            ipad: 2294,
+            itouch: 2441
+        }, {
+            period: '2010 Q3',
+            iphone: 4912,
+            ipad: 1969,
+            itouch: 2501
+        }, {
+            period: '2010 Q4',
+            iphone: 3767,
+            ipad: 3597,
+            itouch: 5689
+        }, {
+            period: '2011 Q1',
+            iphone: 6810,
+            ipad: 1914,
+            itouch: 2293
+        }, {
+            period: '2011 Q2',
+            iphone: 5670,
+            ipad: 4293,
+            itouch: 1881
+        }, {
+            period: '2011 Q3',
+            iphone: 4820,
+            ipad: 3795,
+            itouch: 1588
+        }, {
+            period: '2011 Q4',
+            iphone: 15073,
+            ipad: 5967,
+            itouch: 5175
+        }, {
+            period: '2012 Q1',
+            iphone: 10687,
+            ipad: 4460,
+            itouch: 2028
+        }, {
+            period: '2012 Q2',
+            iphone: 8432,
+            ipad: 5713,
+            itouch: 1791
+        }],
+        xkey: 'period',
+        ykeys: ['iphone', 'ipad', 'itouch'],
+        labels: ['iPhone', 'iPad', 'iPod Touch'],
+        pointSize: 2,
+        hideHover: 'auto',
+        resize: true
+    });
+</script>
+
+{% endblock %}

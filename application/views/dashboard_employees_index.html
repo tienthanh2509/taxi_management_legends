@@ -1,0 +1,256 @@
+{# Master Page #}
+{% extends 'system/admin_master_page.html' %}
+
+{% block head %}{{ parent() }}
+<!-- MetisMenu CSS -->
+<link href="{{ base_url('vendor/bower/metisMenu/dist/metisMenu.min.css') }}" rel="stylesheet">
+<link href="{{ base_url('assets/css/sb-admin-2.css') }}" rel="stylesheet">
+<link href="{{ base_url('vendor/bower/jquery-easyui-1.4.3/themes/default/easyui.css') }}" rel="stylesheet">
+<link href="{{ base_url('vendor/bower/jquery-easyui-1.4.3/themes/icon.css') }}" rel="stylesheet">
+<link href="{{ base_url('assets/css/style.css') }}" rel="stylesheet">
+{% endblock %}
+
+{# Phần đầu trang #}
+{% block body_head %}{% include 'layout/admin_body_head.html' %}{% endblock %}
+
+{# Nội dung trang #}
+{% block body_content %}
+<div id="page-wrapper">
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">Nhân viên</h1>
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+	<!-- /.row -->
+	<div class="row">
+		<div class="col-lg-12">
+			<!-- BEGIN: Employees DataGrid -->
+			<table id="ci_datatable" class="easyui-datagrid" style="height: 400px;"></table>
+			<div id="ci_datatable_toolbar">
+				<a id="ci_datatable_add" href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true">Thêm</a>
+				<a id="ci_datatable_edit" href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Sửa</a>
+				<a id="ci_datatable_delete" href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Xóa</a>
+			</div>
+			<!-- END: Employees DataGrid -->
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+	<!-- /.row -->
+</div>
+<!-- /#page-wrapper -->
+{% endblock %}
+
+{# Phần chân trang #}
+{% block body_footer %}{% include 'layout/admin_body_footer.html' %}{% endblock %}
+
+{% block footer %}{{ parent() }}
+<!-- Metis Menu Plugin JavaScript -->
+<script src="{{ base_url('vendor/bower/metisMenu/dist/metisMenu.min.js') }}"></script>
+<script src="{{ base_url('assets/js/sb-admin-2.js') }}"></script>
+<script src="{{ base_url('vendor/bower/jquery-easyui-1.4.3/jquery.easyui.min.js') }}"></script>
+<script src="{{ base_url('vendor/bower/jquery-easyui-1.4.3/locale/easyui-lang-vi.js') }}"></script>
+<script src="{{ base_url('vendor/bower/datagrid-filter/datagrid-filter.js') }}"></script>
+
+<script>
+$(function(){
+	var dg = $('#ci_datatable').datagrid({
+		title: 'Danh sách nhân viên',
+		toolbar: '#ci_datatable_toolbar',
+		url: '{{ site_url('employees/ajax_list_employees') }}',
+		rownumbers: true,
+		pagination: true,
+		pageSize: 15,
+		pageList: [10, 15, 20, 25, 30, 40, 50],
+		sortName: 'uid',
+		sortOrder: 'asc',
+		singleSelect: true,
+		remoteFilter: true,
+		fitColumns: true,
+		filterBtnIconCls:'icon-filter',
+		columns: [[
+			{field: 'uid', title: 'Mã NV', width: 60, align: 'center', sortable: 'true'},
+			{field: 'last_name', title: 'Họ và tên đệm', sortable: 'true'},
+			{field: 'first_name', title: 'Tên', align: 'right', sortable: 'true'},
+			{field: 'username', title: 'Tài khoản', align: 'left', sortable: 'true'},
+			{field: 'email', title: 'Email', align: 'left', sortable: 'true'},
+			{field: 'gender', title: 'Giới tính', width: 100, align: 'center', sortable: 'true', formatter: function(value,row,index){
+				if(value == 0) {
+					return 'Nam';
+				} else if (value == 1){
+					return 'Nữ';
+				} else {
+					return 'N/a';
+				}
+			}},
+			{field: 'birthday', title: 'Ngày sinh', width: 150, align: 'center', sortable: 'true', formatter: function(value,row,index){
+				if(typeof(value) == 'undefined' || value < 1)
+				{
+					return 'N/a';
+				}
+				else
+				{
+					var date = new Date(value * 1000);
+
+					var y = date.getFullYear();
+					var m = date.getMonth()+1;
+					var d = date.getDate();
+					return m + '/' + d + '/' + y;
+				}
+			}},
+			{field: 'role', title: 'Chức vụ', width: 100, align: 'center', sortable: 'true'},
+			{field: 'hire_date', title: 'Ngày thuê', width: 150, align: 'center', sortable: 'true', formatter: function(value,row,index){
+				if(typeof(value) == 'undefined' || value < 1)
+				{
+					return 'N/a';
+				}
+				else
+				{
+					var date = new Date(value * 1000);
+
+					var y = date.getFullYear();
+					var m = date.getMonth()+1;
+					var d = date.getDate();
+					return m + '/' + d + '/' + y;
+				}
+			}}
+		]],
+	});
+
+	// Kích hoạt chức năng lọc của datagrid
+	dg.datagrid('enableFilter', [
+		{
+			field:'birthday',
+			type:'datebox',
+			options:{precision:1},
+			op:['equal','notequal','less','greater']
+		},
+		{
+			field:'hire_date',
+			type:'datebox',
+			options:{precision:1},
+			op:['equal','notequal','less','greater']
+		},
+		{
+			field:'gender',
+			type:'combobox',
+			options:{
+				panelHeight:'auto',
+				data:[{value:'',text:'Tất cả'},{value:'0',text:'Nam'},{value:'1',text:'Nữ'},{value:'2',text:'N/a'}],
+				onChange:function(value){
+					if (value == ''){
+						dg.datagrid('removeFilterRule', 'gender');
+					} else {
+						dg.datagrid('addFilterRule', {
+							field: 'gender',
+							op: 'equal',
+							value: value
+						});
+					}
+					dg.datagrid('doFilter');
+				}
+			}
+		},
+		{
+			field:'role',
+			type:'combobox',
+			options:{
+				panelHeight:'auto',
+				data:[{value:'',text:'Tất cả'},{value:'1',text:'Quản trị viên'},{value:'2',text:'Kế toán'},{value:'3',text:'Tài xế'}],
+				onChange:function(value){
+					if (value == ''){
+						dg.datagrid('removeFilterRule', 'role');
+					} else {
+						dg.datagrid('addFilterRule', {
+							field: 'role',
+							op: 'equal',
+							value: value
+						});
+					}
+					dg.datagrid('doFilter');
+				}
+			}
+		}
+	]);
+	
+	// Toolbar
+	// Thêm nhân viên
+	$('#ci_datatable_add').click(function (ev) {
+		ev.preventDefault();
+		
+		window.location.href = '{{ site_url('employees/add') }}';
+	});
+
+	$('#ci_datatable_edit').click(function (ev) {
+		ev.preventDefault();
+
+		var row = dg.datagrid('getSelected');
+		if (row){
+			window.location.href = '{{ site_url('employees/edit') }}/' + row.uid;
+		}
+	});
+
+	$('#ci_datatable_delete').click(function (ev) {
+		ev.preventDefault();
+		
+		var row = dg.datagrid('getSelected');
+		if (row){
+			$.messager.confirm('Xác nhận xóa nhân viên ' + row.first_name,'Bạn có chắc xóa nhân viên đã chọn không? Việc này sẽ xóa toàn bộ dữ liệu liên quan tới nhân viên ' + row.first_name, function(r){
+				if (r){
+					var win = $.messager.progress({
+						title:'Chờ tí',
+						msg:'Hệ thống đang xử lý yêu cầu của bạn chờ tí nhé...'
+					});
+				
+					$.ajax({
+						method: 'post',
+						data: {
+							uid: row.uid
+						},
+						url: '{{ site_url('employees/ajax_delete_employees') }}',
+						dataType: 'json',
+						success: function (response) {
+							if (response.status == 1){
+								dg.datagrid('reload');
+
+								setTimeout(function(){
+									$.messager.show({
+										title: 'Hệ thống',
+										msg: 'Xong! Nhân viên "' + row.last_name + ' ' + row.first_name + '" bị xóa hoàn toàn!'
+									});
+								},10);
+							} else {
+								$.messager.show({
+									title: 'Lỗi E[' + response.status + ']',
+									msg: response.message
+								});
+							}
+
+							$.messager.progress('close');
+						},
+						error: function (xhr, ajaxOptions, thrownError) {
+							$.messager.progress('close');
+
+							setTimeout(function(){
+								$.messager.show({
+									title: 'Lỗi',
+									msg: 'Lỗi kết nối tới máy chủ'
+								});
+							},10);
+						}
+					});
+				}
+			});
+		}
+		else
+		{
+			$.messager.show({
+				title: 'Lỗi',
+				msg: 'Hãy chọn 1 dòng sau đó mới xóa được!'
+			});
+		}
+	});
+});
+</script>
+
+{% endblock %}

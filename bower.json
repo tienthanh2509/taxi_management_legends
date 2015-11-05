@@ -1,0 +1,40 @@
+{
+  "name": "d13ht01",
+  "version": "0.0.1",
+  "description": "D13HT01_CodeIgniter_Base",
+  "main": "index.php",
+  "keywords": [
+    "d13ht01",
+    "codeigniter"
+  ],
+  "authors": [
+    "Pham Tien Thanh",
+    "Nguyen Thai Son",
+    "Ho Thanh Thuy",
+    "Nguyen Thanh Van"
+  ],
+  "license": "MIT",
+  "homepage": "http://d13ht01.tk",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor/bower",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "font-awesome": "~4.4.0",
+    "jquery": "~2.1.4",
+    "metisMenu": "~2.2.0",
+    "morris.js": "~0.5.1",
+    "jquery-easyui-1.4.3": "http://www.jeasyui.com/download/downloads/jquery-easyui-1.4.3.zip",
+    "datagrid-filter": "http://www.jeasyui.com/extension/downloads/datagrid-filter.zip",
+    "material-design-lite": "~1.0.6"
+  },
+  "resolutions": {
+    "jquery": ">= 1.9.1",
+    "bootstrap": "~3.3.5"
+  }
+}

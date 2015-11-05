@@ -1,0 +1,26 @@
+/* 
+    Created on : 31-10-2015, 19:31:56
+    Author     : phamthanh
+*/
+
+body {
+	background-color: #e3e3e3;
+}
+#wrap{
+    padding-top: 74px;
+    padding-bottom: 40px;
+}
+#bor-right {
+    border-right: #D5D5D5 1px solid;
+}
+form#login {
+    padding: 15px 15px;
+}
+.navbar-brand{
+    padding: 0;
+}
+form#login input[type="email"],
+form#login input[type="password"]
+{
+    border-radius: 0;
+}

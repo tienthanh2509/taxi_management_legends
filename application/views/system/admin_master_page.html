@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+	{% block head %}<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{{ head.title }}</title>
+
+	<meta name="description" content="{{ head.meta.description }}">
+	<meta name="keywords" content="{{ head.meta.keywords }}">
+	<meta name="author" content="{{ head.meta.author }}">
+	<meta name="developer" content="{{ head.meta.developer }}">
+	<meta name="robots" content="{{ head.meta.robots }}">
+
+	<!-- Bootstrap -->
+	<link href="{{ base_url('vendor/bower/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+	<!-- Font Awesome -->
+	<link href="{{ base_url('vendor/bower/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->{% endblock %}
+
+</head>
+
+<body>
+	<!-- Page head -->
+	<section>{% block body_head %}{% endblock %}</section>
+	<!-- Page body -->
+	<section>{% block body_content %}{% endblock %}</section>
+	<!-- Page footer -->
+	<section>{% block body_footer %}{% endblock %}</section>
+
+	{% block footer %}<!-- Đặt load javascript ở cuối trang để tải trang nhanh hơn -->
+	<script src="{{ base_url('vendor/bower/jquery/dist/jquery.min.js') }}"></script>
+	<script src="{{ base_url('vendor/bower/bootstrap/dist/js/bootstrap.min.js') }}"></script>{% endblock %}
+
+</body>
+
+</html>

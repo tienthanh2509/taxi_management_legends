@@ -1,0 +1,105 @@
+{# Master Page #}
+{% extends 'system/admin_master_page.html' %}
+
+{% block head %}{{ parent() }}
+<!-- MetisMenu CSS -->
+<link href="{{ base_url('vendor/bower/metisMenu/dist/metisMenu.min.css') }}" rel="stylesheet">
+<link href="{{ base_url('assets/css/sb-admin-2.css') }}" rel="stylesheet">
+<link href="{{ base_url('vendor/bower/jquery-easyui-1.4.3/themes/default/easyui.css') }}" rel="stylesheet">
+<link href="{{ base_url('vendor/bower/jquery-easyui-1.4.3/themes/icon.css') }}" rel="stylesheet">
+<link href="{{ base_url('assets/css/style.css') }}" rel="stylesheet">
+{% endblock %}
+
+{# Phần đầu trang #}
+{% block body_head %}{% include 'layout/admin_body_head.html' %}{% endblock %}
+
+{# Nội dung trang #}
+{% block body_content %}
+<div id="page-wrapper">
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">Thêm nhân viên mới</h1>
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+	<!-- /.row -->
+	<div class="row">
+		<div class="col-lg-12">
+			<!-- BEGIN: Add employees form -->
+			<form class="form-horizontal">
+				<div class="form-group">
+					<label for="ci_form_lastname" class="col-sm-2 control-label">Họ và tên đệm</label>
+					<div class="col-sm-5">
+						<input type="text" class="form-control" id="ci_form_lastname">
+					</div>
+					<label for="ci_form_firstname" class="col-sm-1 control-label">Tên</label>
+					<div class="col-sm-3">
+						<input type="text" class="form-control" id="ci_form_firstname">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="ci_form_username" class="col-sm-2 control-label">Tên tài khoản</label>
+					<div class="col-sm-5">
+						<input type="text" class="form-control" id="ci_form_username">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="ci_form_email" class="col-sm-2 control-label">Email</label>
+					<div class="col-sm-5">
+						<input type="text" class="form-control" id="ci_form_email">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="ci_form_gender" class="col-sm-2 control-label">Giới tính</label>
+					<div class="col-sm-2">
+						<select id="gender" name="gender" class="form-control">
+							<option value="0">Nam</option>
+							<option value="1">Nữ</option>
+							<option value="2" selected>N/a</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="ci_form_birthday" class="col-sm-2 control-label">Ngày sinh</label>
+					<div class="col-sm-5">
+						<input type="date" class="form-control" id="ci_form_birthday">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-5">
+						<button type="submit" class="btn btn-primary">Thêm</button>
+					</div>
+				</div>
+			</form>
+			<!-- END: Add employees form -->
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+	<!-- /.row -->
+</div>
+<!-- /#page-wrapper -->
+{% endblock %}
+
+{# Phần chân trang #}
+{% block body_footer %}{% include 'layout/admin_body_footer.html' %}{% endblock %}
+
+{% block footer %}{{ parent() }}
+<!-- Metis Menu Plugin JavaScript -->
+<script src="{{ base_url('vendor/bower/metisMenu/dist/metisMenu.min.js') }}"></script>
+<script src="{{ base_url('assets/js/sb-admin-2.js') }}"></script>
+<script src="{{ base_url('vendor/bower/jquery-easyui-1.4.3/jquery.easyui.min.js') }}"></script>
+<script src="{{ base_url('vendor/bower/jquery-easyui-1.4.3/locale/easyui-lang-vi.js') }}"></script>
+<script src="{{ base_url('vendor/bower/datagrid-filter/datagrid-filter.js') }}"></script>
+
+<script>
+$(function(){
+	
+});
+</script>
+
+{% endblock %}

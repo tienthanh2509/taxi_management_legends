@@ -1,0 +1,10 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix} Chương trình quản lý Taxi
+${licensePrefix} Thiết kế bởi nhóm 1 lớp D13HT01
+${licensePrefix} Bao gồm các thành viên
+${licensePrefix} Hoàng Huy, Thái Sơn, Tiến Thành, Thanh Thúy, Thanh Vân
+<#if licenseLast??>
+${licenseLast}
+</#if>

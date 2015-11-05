@@ -1,0 +1,6 @@
+{
+    "require": {
+        "codeigniter/framework": "^3.0",
+        "twig/twig": "^1.22"
+    }
+}

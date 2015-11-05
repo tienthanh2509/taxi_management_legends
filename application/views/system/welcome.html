@@ -1,0 +1,17 @@
+{# Master Page #}
+{% extends 'system/master_page.html' %}
+
+{% block head %}{{ parent() }}
+<link href="{{ base_url('assets/css/style.css') }}" rel="stylesheet">
+{% endblock %}
+
+{# Phần đầu trang #}
+{% block body_head %}{% include 'layout/body_head.html' %}{% endblock %}
+
+{# Nội dung trang #}
+{% block body_content %}
+
+{% endblock %}
+
+{# Phần chân trang #}
+{% block body_footer %}{% include 'layout/body_footer.html' %}{% endblock %}

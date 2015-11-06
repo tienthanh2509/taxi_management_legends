@@ -18,12 +18,60 @@ class Employees extends Admin_Controller {
 	{
 		$this->render('dashboard_employees_index');
 	}
-	
+
 	public function add()
 	{
+		$this->load->model('ci_d13ht01_model_employees', '_employees');
+
+		$this->load->library('form_validation');
+		//print_r($_POST);
+		$this->form_validation->set_error_delimiters('<span>', '</span><br>');
+		$this->form_validation->set_rules('ci_form_username', 'Tên tài khoản', 'required|min_length[6]|max_length[32]|is_unique[ci_users.username]');
+		$this->form_validation->set_rules('ci_form_password', 'Mật khẩu', 'required|min_length[4]|max_length[32]');
+		$this->form_validation->set_rules('ci_form_password_confirm', 'Nhập lại MK', 'required|matches[ci_form_password]');
+		$this->form_validation->set_rules('ci_form_email', 'Email', 'is_unique[ci_users.email]');
+		$this->form_validation->set_rules('ci_form_phonenumber', 'Điện thoại', 'numeric');
+		$this->form_validation->set_rules('ci_form_gender', 'Giới tính', 'required|integer|in_list[0,1,2]');
+		$this->form_validation->set_rules('ci_form_lastname', 'Họ & tên đệm', '');
+		$this->form_validation->set_rules('ci_form_firstname', 'Tên', 'required');
+		$this->form_validation->set_rules('ci_form_group[]', 'Nhóm', 'required');
+		$this->form_validation->set_rules('ci_form_birthday', 'Ngày sinh', 'required|regex_match[/([0-9]{4})-([0-9]{2})-([0-9]{2})/]');
+
+		if ($this->form_validation->run() === TRUE)
+		{
+			$user_data = [
+				'username'	 => $this->input->post('ci_form_username'),
+				'password'	 => password_hash($this->input->post('ci_form_password'), PASSWORD_DEFAULT),
+				'email'		 => $this->input->post('ci_form_email'),
+				'phone'		 => $this->input->post('ci_form_phonenumber'),
+				'gender'	 => $this->input->post('ci_form_gender'),
+				'last_name'	 => $this->input->post('ci_form_lastname'),
+				'first_name'	 => $this->input->post('ci_form_firstname'),
+				'birthday'	 => strtotime($this->input->post('ci_form_birthday')),
+			];
+
+			$status = $this->_employees->add($user_data, $this->input->post('ci_form_group'));
+			
+			if($status === 0)
+			{
+				$this->data['error_message'] = 'Không thể thêm nhân viên mới';
+			}
+			else
+			{
+				$this->data['message'] = 'Đã thêm nhân viên mới thành công';
+			}
+		}
+		else
+		{
+			$this->data['error_message'] = validation_errors();
+		}
+
+		$this->data['ci_form']				 = [];
+		$this->data['ci_form']['group_list'] = $this->_employees->get_all_group();
+
 		$this->render('dashboard_employees_add');
 	}
-	
+
 	////////////////////////////////////////////////////////////////////////////
 
 	public function ajax_list_employees()
@@ -113,4 +161,5 @@ class Employees extends Admin_Controller {
 		$this->load->model('ci_d13ht01_model_employees', '_employees');
 		$this->output->set_content_type('json')->set_output(json_encode($this->_employees->get_all_group()));
 	}
+
 }

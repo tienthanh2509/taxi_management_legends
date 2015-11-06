@@ -1,0 +1,45 @@
+{#
+Chương trình quản lý Taxi
+Thiết kế bởi nhóm 1 lớp D13HT01
+Bao gồm các thành viên
+Hoàng Huy, Thái Sơn, Tiến Thành, Thanh Thúy, Thanh Vân
+#}
+
+{# Master Page #}
+{% extends 'system/admin_master_page.html' %}
+
+{% block head %}{{ parent() }}
+<link href="{{ base_url('assets/css/style.css') }}" rel="stylesheet">
+{% endblock %}
+
+{# Phần đầu trang #}
+{% block body_head %}{% include 'layout/body_head.html' %}{% endblock %}
+
+{# Nội dung trang #}
+{% block body_content %}
+<div class="container-fluid">
+	<!-- Stack the columns on mobile by making one half-width and the other full-width -->
+	<div class="row">
+		<div class="col-xs-3 col-md-3">
+			
+		</div>
+		<div class="col-xs-9 col-md-7">
+
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{# Phần chân trang #}
+{% block body_footer %}{% include 'layout/body_footer.html' %}{% endblock %}
+
+{% block footer %}{{ parent() }}
+<script>
+$(function(){
+	// Cập nhật Navbar
+	var navbar_id = 'about';
+	$('#ci_navbar_home').removeClass('active');
+	$('#ci_navbar_' + navbar_id).addClass('active');
+});
+</script>
+{% endblock %}

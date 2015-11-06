@@ -4,6 +4,7 @@
  * Description of Ci_d13ht01_model_employees
  *
  * @author phamthanh
+ * @property Ci_d13ht01_model_auth $auth Auth
  */
 class Ci_d13ht01_model_employees extends CI_Model {
 
@@ -12,6 +13,44 @@ class Ci_d13ht01_model_employees extends CI_Model {
 		parent::__construct();
 
 		$this->load->database();
+	}
+
+	public function add($uset_data, $group_list)
+	{
+		if (empty($uset_data) || empty($group_list))
+		{
+			return 0;
+		}
+
+		$this->load->model('ci_d13ht01_model_auth', 'auth');
+
+		$this->db->trans_start();
+
+		$this->db->insert('ci_users', $uset_data);
+		$new_user = $this->auth->get_user_by_username($uset_data['username']);
+
+		$grant = [];
+
+		foreach ($group_list as $group)
+		{
+			$grant[] = [
+				'gid'	 => $group,
+				'uid'	 => $new_user['uid']
+			];
+		}
+
+		$this->db->insert_batch('ci_groups_users', $grant);
+
+		$this->db->trans_complete();
+
+		if ($this->db->trans_status() === FALSE)
+		{
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
 	}
 
 	public function ajax_data_grid($limit = 10, $offset = 0, $sort = 'ci_users.uid', $order = 'asc', $filter_rules = [])

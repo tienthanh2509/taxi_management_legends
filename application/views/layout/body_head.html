@@ -1,0 +1,35 @@
+<!--
+ Chương trình quản lý Taxi
+ Thiết kế bởi nhóm 1 lớp D13HT01
+ Bao gồm các thành viên
+ Hoàng Huy, Thái Sơn, Tiến Thành, Thanh Thúy, Thanh Vân
+-->
+
+<!-- BEGIN: Thanh điều hướng -->
+<nav class="navbar navbar-inverse navbar-static-top">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#ci_navbar">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span> 
+			</button>
+			<a class="navbar-brand" href="{{ site_url() }}">
+				<i class="fa fa-taxi"></i>
+			</a>
+		</div>
+		<div class="collapse navbar-collapse" id="ci_navbar">
+			<div>
+				<ul class="nav navbar-nav">
+					<li id="ci_navbar_home" class="active"><a href="{{ site_url() }}"><i class="fa fa-dashboard fa-fw"></i> Trang chủ</a></li>
+					<li id="ci_navbar_about"><a href="{{ site_url('about') }}"><i class="fa fa-map-signs fa-fw"></i> Giới thiệu</a></li>
+				</ul>
+
+				<ul class="nav navbar-nav navbar-right">
+					<li id="ci_navbar_support"><a href="{{ site_url('support') }}"><i class="fa fa-support fa-fw"></i> Hỗ trợ</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</nav>
+<!-- END: Thanh điều hướng -->

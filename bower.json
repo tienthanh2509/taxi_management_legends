@@ -8,8 +8,9 @@
     "codeigniter"
   ],
   "authors": [
+	"Doan Hoang Huy",
+	"Nguyen Thai Son",
     "Pham Tien Thanh",
-    "Nguyen Thai Son",
     "Ho Thanh Thuy",
     "Nguyen Thanh Van"
   ],
@@ -27,12 +28,10 @@
     "bootstrap": "~3.3.5",
     "font-awesome": "~4.4.0",
     "jquery": "~2.1.4",
-    "metisMenu": "~2.2.0",
-    "morris.js": "~0.5.1",
     "jquery-easyui-1.4.3": "http://www.jeasyui.com/download/downloads/jquery-easyui-1.4.3.zip",
     "datagrid-filter": "http://www.jeasyui.com/extension/downloads/datagrid-filter.zip",
-    "material-design-lite": "~1.0.6",
-    "bootswatch": "~3.3.5+4"
+    "bootswatch": "~3.3.5",
+    "jquery-validation": "~1.14.0"
   },
   "resolutions": {
     "jquery": ">= 1.9.1",

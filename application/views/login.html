@@ -4,10 +4,18 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Đăng nhập vào hệ thống</title>
+
+	<!-- Pace -->
+	<script src="{{ base_url('vendor/bower/PACE/pace.min.js') }}"></script>
+	<link href="{{ base_url('vendor/bower/PACE/themes/blue/pace-theme-minimal.css') }}" rel="stylesheet">
+
 	<!-- Bootstrap -->
 	<link href="{{ base_url('vendor/bower/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+
 	<!-- Font Awesome -->
 	<link href="{{ base_url('vendor/bower/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+
+	<!-- Custom CSS -->
 	<link href="assets/css/login.css" rel="stylesheet">
 </head>
 
@@ -21,7 +29,7 @@
 
 					<div class="panel-body" id="success">
 						<div class="row">
-							<div class="col-md-8" id="bor-right" >
+							<div class="col-md-offset-1 col-md-8">
 								<form class="form-horizontal" action="{{ site_url('user/login') }}" method="post" id="login" role="form">
 									<div class="form-group">
 										<label for="username" class="col-sm-4 control-label">Tên tài khoản</label>
@@ -40,17 +48,14 @@
 											<button data-loading-text="Đang xử lý..." type="submit" id="btn-login" class="btn btn-default btn-primary"><i class="fa fa-sign-in"></i> Đăng nhập</button>
 											<div class="pull-right">
 												<ul class="list-unstyled">
-													<li><a href="#">Bạn có thắc mắc?</a></li>
-													<li><a href="#">Bạn quên mật khẩu?</a></li>
+													<li><a href="{{ site_url('support/faq') }}">Câu hỏi thường gặp?</a></li>
+													<li><a href="{{ site_url('user/forgotinfo?next=' ~ current_url()|url_encode) }}">Bạn quên mật khẩu?</a></li>
 												</ul>
 
 											</div>
 										</div>
 									</div>
 								</form>
-							</div>
-							<div class="col-md-4">
-								<img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?s=200" class="img-responsive"/>
 							</div>
 						</div>
 					</div>
@@ -79,13 +84,32 @@
 						$('#validation-errors').hide().empty();
 					},
 					success: function(data) {
-						if (data.status == false) {
-							$('#validation-errors').append('<div class="alert alert-danger"><strong>' + data.message + '</strong><div>');
-							$('#validation-errors').show();
-							btn.button('reset');
-						} else {
+						if (data.status === 1) {
 							$('#success').html('<div class="alert alert-success">Đăng nhập thành công! Hệ thống sẽ chuyển hướng bạn đến bảng điều khiển...<div>');
 							location.reload();
+						} else if(data.status === -1) {
+							$('#validation-errors').append('<div class="alert alert-danger"><strong>' + data.message + ' <span>Hãy đợi <i class="fa fa-circle-o-notch fa-spin"></i> <span id="secField">' + data.timeout + '</span> giây...</span></strong><div>');
+							$('#validation-errors').show();
+
+							btn.attr('disabled', true);;
+							var Timeout = data.timeout;
+							var timeBegin = new Date();
+							var msBegin = timeBegin.getTime();
+							timerID = setInterval(function () {
+								var timeCurrent = new Date();
+								var msCurrent = timeCurrent.getTime();
+								var ms = Math.round((msCurrent - msBegin) / 1000);
+								document.getElementById('secField').innerHTML = Timeout - ms;
+								if (Timeout <= ms)
+								{
+									btn.removeAttr('disabled');
+									$('#validation-errors').hide();
+								}
+							}, 1000);
+
+						} else {
+							$('#validation-errors').append('<div class="alert alert-danger"><strong>' + data.message + '</strong><div>');
+							$('#validation-errors').show();
 						}
 					},
 					error: function(xhr, textStatus, thrownError) {
@@ -94,6 +118,7 @@
 						btn.button('reset');
 					}
 				});
+				btn.button('reset');
 				return false;
 			});
 		});

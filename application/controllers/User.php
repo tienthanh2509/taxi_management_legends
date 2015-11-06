@@ -17,11 +17,23 @@ class User extends CI_D13HT01 {
 
 	public function login()
 	{
+		$login_attempts				 = (int) $this->session->userdata('login.attempts') ? $this->session->userdata('login.attempts') : 0;
+		$login_attempts_timestamp	 = (int) $this->session->userdata('login.attempts.countdown') ? $this->session->userdata('login.attempts.countdown') : 0;
+		$login_attempts_countdown	 = (30 * 60) - (time() - $login_attempts_timestamp);
+
 		if ($this->session->userdata('ci_user'))
 		{
 			$response = [
 				'status'	 => 1,
 				'message'	 => 'Đăng nhập thành công!'
+			];
+		}
+		elseif ($login_attempts > 3 && $login_attempts_countdown > 0)
+		{
+			$response = [
+				'status'	 => -1,
+				'message'	 => 'Bạn đã đăng nhập sai quá nhiều lần!',
+				'timeout'	 => $login_attempts_countdown
 			];
 		}
 		else
@@ -48,6 +60,13 @@ class User extends CI_D13HT01 {
 						'status'	 => 0,
 						'message'	 => 'Sai tài khoản hoặc mật khẩu?!'
 					];
+
+					$this->session->set_userdata('login.attempts', $login_attempts + 1);
+
+					if ($login_attempts > 3)
+					{
+						$this->session->set_userdata('login.attempts.countdown', time());
+					}
 				}
 				elseif ($status === 1)
 				{

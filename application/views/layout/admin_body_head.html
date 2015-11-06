@@ -1,222 +1,41 @@
-<!-- Navigation -->
-<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-	<div class="navbar-header">
-		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-			<span class="sr-only">Toggle navigation</span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-		</button>
-		<a class="navbar-brand" href="index.html">Quản lý Taxi</a>
-	</div>
-	<!-- /.navbar-header -->
+<!--
+ Chương trình quản lý Taxi
+ Thiết kế bởi nhóm 1 lớp D13HT01
+ Bao gồm các thành viên
+ Hoàng Huy, Thái Sơn, Tiến Thành, Thanh Thúy, Thanh Vân
+-->
 
-	<ul class="nav navbar-top-links navbar-right">
-		<li class="dropdown">
-			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-				<i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
+<!-- BEGIN: Thanh điều hướng -->
+<nav class="navbar navbar-inverse navbar-static-top">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="{{ site_url() }}">
+				<i class="fa fa-taxi"></i>
 			</a>
-			<ul class="dropdown-menu dropdown-messages">
-				<li>
-					<a href="#">
-						<div>
-							<strong>[Hệ thống]</strong>
-							<span class="pull-right text-muted">
-								<em>Hôm qua</em>
-							</span>
-						</div>
-						<div>Mọi thứ đều hoạt động bình thường</div>
-					</a>
-				</li>
-				<li class="divider"></li>
-				<li>
-					<a href="#">
-						<div>
-							<strong>[Hệ thống]</strong>
-							<span class="pull-right text-muted">
-								<em>Hôm kia</em>
-							</span>
-						</div>
-						<div>Mọi thứ đều hoạt động bình thường</div>
-					</a>
-				</li>
-				<li class="divider"></li>
-				<li>
-					<a class="text-center" href="#">
-						<strong>Đọc tất cả tin nhắn</strong>
-						<i class="fa fa-angle-right"></i>
-					</a>
-				</li>
+		</div>
+		<div>
+			<ul class="nav navbar-nav">
+				<li id="ci_navbar_home" class="active"><a href="{{ site_url() }}"><i class="fa fa-dashboard fa-fw"></i> Tổng quan</a></li>
+				<li id="ci_navbar_employees" ><a href="{{ site_url('employees') }}"><i class="fa fa-users fa-fw"></i> Nhân sự</a></li>
+				<li id="ci_navbar_car" ><a href="{{ site_url('car') }}"><i class="fa fa-car fa-fw"></i> Xe</a></li>
+				<li id="ci_navbar_schedule" ><a href="{{ site_url('schedule') }}"><i class="fa fa-calendar fa-fw"></i>Phân công</a></li>
+				<li id="ci_navbar_trip" ><a href="{{ site_url('trip') }}"><i class="fa fa-road fa-fw"></i>Chuyến đi</a></li>
+				<li id="ci_navbar_stat" ><a href="{{ site_url('stat') }}"><i class="fa fa-bar-chart-o fa-fw"></i>Thống kê</a></li>
 			</ul>
-			<!-- /.dropdown-messages -->
-		</li>
-		<!-- /.dropdown -->
-		<li class="dropdown">
-			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-				<i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
-			</a>
-			<ul class="dropdown-menu dropdown-tasks">
-				<li>
-					<a href="#">
-						<div>
-							<p>
-								<strong>Sao lưu dữ liệu</strong>
-								<span class="pull-right text-muted">Tiến độ 40%</span>
-							</p>
-							<div class="progress progress-striped active">
-								<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-									<span class="sr-only">40% Complete (success)</span>
-								</div>
-							</div>
-						</div>
-					</a>
-				</li>
-				<li>
-					<a class="text-center" href="#">
-						<strong>Xem tất cả công việc</strong>
-						<i class="fa fa-angle-right"></i>
-					</a>
-				</li>
-			</ul>
-			<!-- /.dropdown-tasks -->
-		</li>
-		<!-- /.dropdown -->
-		<li class="dropdown">
-			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-				<i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
-			</a>
-			<ul class="dropdown-menu dropdown-alerts">
-				<li>
-					<a href="#">
-						<div>
-							<i class="fa fa-comment fa-fw"></i> Phản hồi
-							<span class="pull-right text-muted small">1 phút trước</span>
-						</div>
-					</a>
-				</li>
-				<li class="divider"></li>
-				<li>
-					<a href="#">
-						<div>
-							<i class="fa fa-envelope fa-fw"></i> Đã gửi tin nhắn
-							<span class="pull-right text-muted small">4 phút trước</span>
-						</div>
-					</a>
-				</li>
-				<li class="divider"></li>
-				<li>
-					<a href="#">
-						<div>
-							<i class="fa fa-tasks fa-fw"></i> Sao lưu CSDL
-							<span class="pull-right text-muted small">4 phút trước</span>
-						</div>
-					</a>
-				</li>
-				<li class="divider"></li>
-				<li>
-					<a href="#">
-						<div>
-							<i class="fa fa-upload fa-fw"></i> Khởi động lại máy chủ
-							<span class="pull-right text-muted small">4 phút trước</span>
-						</div>
-					</a>
-				</li>
-				<li class="divider"></li>
-				<li>
-					<a class="text-center" href="#">
-						<strong>Xem tất cả thông báo</strong>
-						<i class="fa fa-angle-right"></i>
-					</a>
-				</li>
-			</ul>
-			<!-- /.dropdown-alerts -->
-		</li>
-		<!-- /.dropdown -->
-		<li class="dropdown">
-			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-				<i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
-			</a>
-			<ul class="dropdown-menu dropdown-user">
-				<li><a href="#"><i class="fa fa-user fa-fw"></i> Hồ sơ cá nhân</a>
-				</li>
-				<li><a href="#"><i class="fa fa-gear fa-fw"></i> Thiết lập</a>
-				</li>
-				<li class="divider"></li>
-				<li><a href="{{ site_url('user/logout') }}"><i class="fa fa-sign-out fa-fw"></i> Đăng xuất</a>
-				</li>
-			</ul>
-			<!-- /.dropdown-user -->
-		</li>
-		<!-- /.dropdown -->
-	</ul>
-	<!-- /.navbar-top-links -->
 
-	<div class="navbar-default sidebar" role="navigation">
-		<div class="sidebar-nav navbar-collapse">
-			<ul class="nav" id="side-menu">
-				<li class="sidebar-search">
-					<div class="input-group custom-search-form">
-						<input type="text" class="form-control" placeholder="Tìm kiếm cài đặt..." disabled>
-						<span class="input-group-btn">
-						<button class="btn btn-default" type="button" disabled>
-							<i class="fa fa-search"></i>
-						</button>
-					</span>
-					</div>
-					<!-- /input-group -->
-				</li>
-				<li id="side-menu-dashboard">
-					<a href="{{ site_url() }}"><i class="fa fa-dashboard fa-fw"></i> Bảng điều khiển</a>
-				</li>
-				<li id="side-menu-trip">
-					<a href="{{ site_url('trip') }}"><i class="fa fa-history fa-fw"></i> Nhật trình</a>
-				</li>
-				<li id="side-menu-schedule">
-					<a href="{{ site_url('schedule') }}"><i class="fa fa-calendar fa-fw"></i> Phân công</a>
-				</li>
-				<li id="side-menu-structure">
-					<a href="#"><i class="fa fa-sitemap fa-fw"></i> Cơ cấu - Tổ chức<span class="fa arrow"></span></a>
-					<ul class="nav nav-second-level">
-						<li id="side-menu-car">
-							<a href="#"><i class="fa fa-car fa-fw"></i> Xe <span class="fa arrow"></span></a>
-							<ul class="nav nav-third-level">
-								<li>
-									<a href="{{ site_url('car') }}">Quản lý Xe</a>
-								</li>
-								<li>
-									<a href="{{ site_url('car/model') }}">Danh mục mẫu Xe</a>
-								</li>
-								<li>
-									<a href="{{ site_url('manufacturer') }}">Đối tác SX Xe</a>
-								</li>
-							</ul>
-							<!-- /.nav-third-level -->
-						</li>
-						<li id="side-menu-employees">
-							<a href="#"><i class="fa fa-users fa-fw"></i> Nhân sự <span class="fa arrow"></span></a>
-							<ul class="nav nav-third-level">
-								<li>
-									<a href="{{ site_url('employees') }}">Quản lý thông tin nhân viên</a>
-								</li>
-							</ul>
-							<!-- /.nav-third-level -->
-						</li>
+			<ul class="nav navbar-nav navbar-right">
+				<li id="ci_navbar_support"><a href="{{ site_url('support') }}"><i class="fa fa-support fa-fw"></i> Hỗ trợ</a></li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Chào <b>{{ CI.session.userdata('ci_user') }}</b> <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="{{ site_url('user/change_password') }}"><i class="fa fa-lock fa-fw"></i> Thay đổi mật khẩu</a></li>
+						<li class="divider"></li>
+						<!--<li class="dropdown-header"></li>-->
+						<li><a href="{{ site_url('user/logout') }}"><i class="fa fa-sign-out fa-fw"></i> Đăng xuất</a></li>
 					</ul>
-					<!-- /.nav-second-level -->
-				</li>
-				<li>
-					<a href="{{ site_url('stat') }}"><i class="fa fa-bar-chart-o fa-fw"></i> Thống kê<span class="fa arrow"></span></a>
-					<ul class="nav nav-second-level">
-						<li>
-							<a href="{{ site_url('stat/month') }}">Báo cáo tháng</a>
-							<a href="{{ site_url('stat/quarter') }}">Báo cáo quý</a>
-						</li>
-					</ul>
-					<!-- /.nav-second-level -->
 				</li>
 			</ul>
 		</div>
-		<!-- /.sidebar-collapse -->
 	</div>
-	<!-- /.navbar-static-side -->
 </nav>
+<!-- END: Thanh điều hướng -->

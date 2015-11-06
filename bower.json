@@ -31,7 +31,8 @@
     "morris.js": "~0.5.1",
     "jquery-easyui-1.4.3": "http://www.jeasyui.com/download/downloads/jquery-easyui-1.4.3.zip",
     "datagrid-filter": "http://www.jeasyui.com/extension/downloads/datagrid-filter.zip",
-    "material-design-lite": "~1.0.6"
+    "material-design-lite": "~1.0.6",
+    "bootswatch": "~3.3.5+4"
   },
   "resolutions": {
     "jquery": ">= 1.9.1",

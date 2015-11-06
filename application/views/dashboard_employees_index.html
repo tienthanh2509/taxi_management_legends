@@ -2,9 +2,6 @@
 {% extends 'system/admin_master_page.html' %}
 
 {% block head %}{{ parent() }}
-<!-- MetisMenu CSS -->
-<link href="{{ base_url('vendor/bower/metisMenu/dist/metisMenu.min.css') }}" rel="stylesheet">
-<link href="{{ base_url('assets/css/sb-admin-2.css') }}" rel="stylesheet">
 <link href="{{ base_url('vendor/bower/jquery-easyui-1.4.3/themes/default/easyui.css') }}" rel="stylesheet">
 <link href="{{ base_url('vendor/bower/jquery-easyui-1.4.3/themes/icon.css') }}" rel="stylesheet">
 <link href="{{ base_url('assets/css/style.css') }}" rel="stylesheet">
@@ -15,18 +12,15 @@
 
 {# Nội dung trang #}
 {% block body_content %}
-<div id="page-wrapper">
+<div class="container-fluid">
+	<!-- Stack the columns on mobile by making one half-width and the other full-width -->
 	<div class="row">
-		<div class="col-lg-12">
-			<h1 class="page-header">Nhân viên</h1>
+		<div class="col-xs-3 col-md-3">
+			{% include 'layout/employees_sidebar_left.html' %}
 		</div>
-		<!-- /.col-lg-12 -->
-	</div>
-	<!-- /.row -->
-	<div class="row">
-		<div class="col-lg-12">
+		<div class="col-xs-9 col-md-9">
 			<!-- BEGIN: Employees DataGrid -->
-			<table id="ci_datatable" class="easyui-datagrid" style="height: 400px;"></table>
+			<table id="ci_datatable" class="easyui-datagrid" style="width: 100%; height: 450px;"></table>
 			<div id="ci_datatable_toolbar">
 				<a id="ci_datatable_add" href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true">Thêm</a>
 				<a id="ci_datatable_edit" href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Sửa</a>
@@ -34,26 +28,25 @@
 			</div>
 			<!-- END: Employees DataGrid -->
 		</div>
-		<!-- /.col-lg-12 -->
 	</div>
-	<!-- /.row -->
 </div>
-<!-- /#page-wrapper -->
 {% endblock %}
 
 {# Phần chân trang #}
 {% block body_footer %}{% include 'layout/admin_body_footer.html' %}{% endblock %}
 
 {% block footer %}{{ parent() }}
-<!-- Metis Menu Plugin JavaScript -->
-<script src="{{ base_url('vendor/bower/metisMenu/dist/metisMenu.min.js') }}"></script>
-<script src="{{ base_url('assets/js/sb-admin-2.js') }}"></script>
 <script src="{{ base_url('vendor/bower/jquery-easyui-1.4.3/jquery.easyui.min.js') }}"></script>
 <script src="{{ base_url('vendor/bower/jquery-easyui-1.4.3/locale/easyui-lang-vi.js') }}"></script>
 <script src="{{ base_url('vendor/bower/datagrid-filter/datagrid-filter.js') }}"></script>
 
 <script>
 $(function(){
+	// Cập nhật Navbar
+	var navbar_id = 'employees';
+	$('#ci_navbar_home').removeClass('active');
+	$('#ci_navbar_' + navbar_id).addClass('active');
+
 	var dg = $('#ci_datatable').datagrid({
 		title: 'Danh sách nhân viên',
 		toolbar: '#ci_datatable_toolbar',

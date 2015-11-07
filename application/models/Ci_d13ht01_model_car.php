@@ -14,6 +14,25 @@ class Ci_d13ht01_model_car extends CI_Model {
 		$this->load->database();
 	}
 
+	function get_car_by_cid($cid)
+	{
+		return $this->__get_car_by_xxx('cid', $cid);
+	}
+
+	private function __get_car_by_xxx($xxx, $yyy)
+	{
+		$this->db->where($xxx, $yyy);
+
+		$query = $this->db->get('ci_cars');
+
+		foreach ($query->result_array() as $row)
+		{
+			return $row;
+		}
+
+		return NULL;
+	}
+
 	public function car_catalog($limit = 10, $offset = 0, $sort = 'cid', $order = 'asc')
 	{
 		// Tìm tổng số xe

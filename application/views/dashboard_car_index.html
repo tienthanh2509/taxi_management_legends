@@ -57,11 +57,90 @@ $(function(){
 		pageList: [10, 15, 20, 25, 30, 40, 50],
 		sortName: 'cid',
 		sortOrder: 'asc',
+		fitColumns: true,
 		columns: [[
 			{field: 'cid', title: 'Số hiệu', width: 50, align: 'center', sortable: 'true'},
 			{field: 'license_plate', title: 'Biển số', width: 300, align: 'center', sortable: 'true'},
 			{field: 'name', title: 'Nhà sản xuất', width: 300, sortable: 'true'}
 		]],
+	});
+
+	// Toolbar
+	// Thêm nhân viên
+	$('#ci_datatable_add').click(function (ev) {
+		ev.preventDefault();
+		
+		window.location.href = '{{ site_url('car/add') }}';
+	});
+
+	$('#ci_datatable_edit').click(function (ev) {
+		ev.preventDefault();
+
+		var row = dg.datagrid('getSelected');
+		if (row){
+			window.location.href = '{{ site_url('car/edit') }}/' + row.cid;
+		}
+	});
+
+	$('#ci_datatable_delete').click(function (ev) {
+		ev.preventDefault();
+		
+		var row = dg.datagrid('getSelected');
+		if (row){
+			$.messager.confirm('Xác nhận xóa xe ' + row.license_plate,'Bạn có chắc xóa xe mang biển số ' + row.license_plate + ' này không?', function(r){
+				if (r){
+					var win = $.messager.progress({
+						title:'Chờ tí',
+						msg:'Hệ thống đang xử lý yêu cầu của bạn chờ tí nhé...'
+					});
+				
+					$.ajax({
+						method: 'post',
+						data: {
+							cid: row.cid
+						},
+						url: '{{ site_url('car/ajax_delete_car') }}',
+						dataType: 'json',
+						success: function (response) {
+							if (response.status == 1){
+								dg.datagrid('reload');
+
+								setTimeout(function(){
+									$.messager.show({
+										title: 'Hệ thống',
+										msg: 'Xong! Xe "' + row.license_plate + '" đã bị xóa hoàn toàn!'
+									});
+								},10);
+							} else {
+								$.messager.show({
+									title: 'Lỗi E[' + response.status + ']',
+									msg: response.message
+								});
+							}
+
+							$.messager.progress('close');
+						},
+						error: function (xhr, ajaxOptions, thrownError) {
+							$.messager.progress('close');
+
+							setTimeout(function(){
+								$.messager.show({
+									title: 'Lỗi',
+									msg: 'Lỗi kết nối tới máy chủ'
+								});
+							},10);
+						}
+					});
+				}
+			});
+		}
+		else
+		{
+			$.messager.show({
+				title: 'Lỗi',
+				msg: 'Hãy chọn 1 dòng sau đó mới xóa được!'
+			});
+		}
 	});
 });
 </script>

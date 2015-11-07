@@ -4,7 +4,7 @@
  * Description of Car
  *
  * @author phamthanh
- * @property List_cars $list_cars Model lớp Xe
+ * @property Ci_d13ht01_model_car $_car Model lớp Xe
  */
 class Car extends Admin_Controller {
 
@@ -24,14 +24,126 @@ class Car extends Admin_Controller {
 		{
 			show_404();
 		}
-		elseif(!in_array($sort, ['cid', 'license_plate', 'name']) || !in_array($order, ['asc', 'desc']))
+		elseif (!in_array($sort, ['cid', 'license_plate', 'name']) || !in_array($order, ['asc', 'desc']))
 		{
 			show_404();
 		}
 
-		$this->load->model('list_cars');
-		$danh_muc_xe = $this->list_cars->car_catalog($rows, (($page - 1) * $rows), $sort, $order);
+		$this->load->model('Ci_d13ht01_model_car', '_car');
+		$danh_muc_xe = $this->_car->car_catalog($rows, (($page - 1) * $rows), $sort, $order);
 		$this->output->set_content_type('json')->append_output(json_encode($danh_muc_xe));
+	}
+
+	public function add()
+	{
+		
+	}
+
+	public function edit($cid = '')
+	{
+		
+	}
+
+	public function delete($cid = '')
+	{
+		$this->load->model('Ci_d13ht01_model_car', '_car');
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_error_delimiters('<span>', '</span><br>');
+
+		if (!$cid)
+		{
+			$this->form_validation->set_rules('ci_form_cid', 'Mã NV', 'required|numeric');
+			if ($this->form_validation->run() === TRUE)
+			{
+				$this->data['car'] = $this->_car->get_car_by_cid($this->input->post('ci_form_cid'));
+
+				if (empty($this->data['car']))
+				{
+					$this->data['error_message'] = 'Không tìm thấy xe nào có mã là: ' . $this->input->post('ci_form_cid');
+				}
+				else
+				{
+					$this->output->set_header('Location: ' . $this->config->site_url('car/delete/' . $this->input->post('ci_form_cid')));
+					return;
+				}
+			}
+			else
+			{
+				$this->data['error_message'] = validation_errors();
+			}
+		}
+		else
+		{
+			$this->data['car'] = $this->_car->get_car_by_cid($cid);
+
+			if (empty($this->data['car']))
+			{
+				$this->data['error_message'] = 'Không tìm thấy xe nào có mã là: ' . $cid;
+			}
+			elseif ($this->input->post('confirm'))
+			{
+				$status = $this->_car->delete($cid);
+				if ($status == 1)
+				{
+					$this->data['message'] = 'Đã xóa xe thành công!';
+				}
+				elseif ($status == 0)
+				{
+					$this->data['error_message'] = 'Không thể xóa xe được yêu cầu!';
+				}
+				else
+				{
+					$this->data['error_message'] = 'Lỗi không xác định, mã lỗi ' . $status;
+				}
+			}
+		}
+
+		$this->data['cid'] = $cid;
+
+		$this->render('dashboard_car_delete');
+	}
+
+	public function ajax_delete_car()
+	{
+		$this->load->model('Ci_d13ht01_model_car', '_car');
+
+		$cid = $this->input->post('cid');
+
+		if (!$cid)
+		{
+			$output = [
+				'status'	 => -1,
+				'message'	 => 'Dữ liệu đầu vào không hợp lệ!'
+			];
+		}
+		else
+		{
+			$status = $this->_car->delete($cid);
+			if ($status == 1)
+			{
+				$output = [
+					'status'	 => $status,
+					'message'	 => 'Đã xóa xe thành công!'
+				];
+			}
+			elseif ($status == 0)
+			{
+				$output = [
+					'status'	 => $status,
+					'message'	 => 'Không thể xóa xe được yêu cầu!'
+				];
+			}
+			else
+			{
+				$output = [
+					'status'	 => $status,
+					'message'	 => 'Lỗi không xác định, mã lỗi ' . $status
+				];
+			}
+		}
+
+		$this->output->set_content_type('json')->set_output(json_encode($output));
 	}
 
 }

@@ -73,11 +73,6 @@ class Employees extends Admin_Controller {
 		$this->render('dashboard_employees_add');
 	}
 
-	public function view($user_id = '')
-	{
-		
-	}
-
 	public function edit($user_id = '')
 	{
 		$this->load->model('ci_d13ht01_model_auth', 'auth');
@@ -101,6 +96,7 @@ class Employees extends Admin_Controller {
 				else
 				{
 					$this->output->set_header('Location: ' . $this->config->site_url('employees/edit/' . $this->input->post('ci_form_userid')));
+					return;
 				}
 			}
 			else
@@ -136,7 +132,8 @@ class Employees extends Admin_Controller {
 					'birthday'	 => strtotime($this->input->post('ci_form_birthday')),
 				];
 
-				if($this->input->post('ci_form_password')) {
+				if ($this->input->post('ci_form_password'))
+				{
 					$user_data['password'] = password_hash($this->input->post('ci_form_password'), PASSWORD_DEFAULT);
 				}
 
@@ -187,20 +184,46 @@ class Employees extends Admin_Controller {
 			$this->form_validation->set_rules('ci_form_userid', 'Mã NV', 'required|numeric');
 			if ($this->form_validation->run() === TRUE)
 			{
-				$user = $this->auth->get_user_by_uid($this->input->post('ci_form_userid'));
+				$this->data['user'] = $this->auth->get_user_by_uid($this->input->post('ci_form_userid'));
 
-				if (empty($user))
+				if (empty($this->data['user']))
 				{
 					$this->data['error_message'] = 'Không tìm thấy nhân viên nào có mã là: ' . $this->input->post('ci_form_userid');
 				}
 				else
 				{
-					$this->output->set_header('Location: ' . $this->config->site_url('employees/edit/' . $this->input->post('ci_form_userid')));
+					$this->output->set_header('Location: ' . $this->config->site_url('employees/delete/' . $this->input->post('ci_form_userid')));
+					return;
 				}
 			}
 			else
 			{
 				$this->data['error_message'] = validation_errors();
+			}
+		}
+		else
+		{
+			$this->data['user'] = $this->auth->get_user_by_uid($user_id);
+
+			if (empty($this->data['user']))
+			{
+				$this->data['error_message'] = 'Không tìm thấy nhân viên nào có mã là: ' . $user_id;
+			}
+			elseif ($this->input->post('confirm'))
+			{
+				$status = $this->auth->delete_user($user_id);
+				if ($status == 1)
+				{
+					$this->data['message'] = 'Đã xóa tài khoản thành công!';
+				}
+				elseif ($status == 0)
+				{
+					$this->data['error_message'] = 'Không thể xóa tài khoản được yêu cầu!';
+				}
+				else
+				{
+					$this->data['error_message'] = 'Lỗi không xác định, mã lỗi ' . $status;
+				}
 			}
 		}
 

@@ -32,7 +32,32 @@
 					{% if user_id is empty %}
 					{% include 'layout/form_employees_input_userid.html' %}
 					{% else %}
-						
+						{% if message %}
+						<div class="alert alert-success" role="alert">
+							<span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+							<span class="sr-only">Thông báo:</span>
+							{{ message|raw }}
+							<br>
+							<button class="btn btn-success" type="button" onclick="window.history.back();"><i class="fa fa-backward fa-fw"></i> Quay lại</button>
+						</div>
+						{% elseif error_message %}
+						<div class="alert alert-danger" role="alert">
+							<span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+							<span class="sr-only">Lỗi:</span>
+							{{ error_message|raw }}
+						</div>
+						{% else %}
+						<div class="alert alert-warning" role="alert">
+							<!--<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+							<h4><b><i class="fa fa-exclamation-triangle"></i> Xác nhận!</b></h4><br>
+							Thao thác không an toàn.
+							<form method="post">
+								<input type="hidden" name="confirm" value="1">
+								<button class="btn btn-success" type="button" onclick="window.history.back();"><i class="fa fa-backward fa-fw"></i> Quay lại</button>
+								<button class="btn btn-primary" type="submit"><i class="fa fa-arrow-circle-o-right"></i> Tiếp tục</button>
+							</form>
+						</div>
+						{% endif %}
 					{% endif %}
 				</div>
 			</div>
@@ -47,17 +72,17 @@
 
 {% block footer %}{{ parent() }}
 <script>
-$(function(){
-	// Cập nhật Navbar
-	var navbar_id = 'employees';
-	$('#ci_navbar_home').removeClass('active');
-	$('#ci_navbar_' + navbar_id).addClass('active');
+	$(function () {
+		// Cập nhật Navbar
+		var navbar_id = 'employees';
+		$('#ci_navbar_home').removeClass('active');
+		$('#ci_navbar_' + navbar_id).addClass('active');
 
-	// Cập nhật Sidebar
-	var sidebar_id = 'delete';
-	$('#ci_sidebar_left_employees_view').removeClass('active');
-	$('#ci_sidebar_left_employees_' + sidebar_id).addClass('active');
-});
+		// Cập nhật Sidebar
+		var sidebar_id = 'delete';
+		$('#ci_sidebar_left_employees_view').removeClass('active');
+		$('#ci_sidebar_left_employees_' + sidebar_id).addClass('active');
+	});
 </script>
 
 {% endblock %}

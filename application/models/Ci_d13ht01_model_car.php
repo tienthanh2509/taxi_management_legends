@@ -5,7 +5,7 @@
  *
  * @author phamthanh
  */
-class List_cars extends CI_Model {
+class Ci_d13ht01_model_car extends CI_Model {
 
 	public function __construct()
 	{
@@ -28,6 +28,30 @@ class List_cars extends CI_Model {
 		$query_data = $this->db->get('ci_cars');
 
 		return ['total' => $query_count->first_row()->total, 'rows' => $query_data->result_array()];
+	}
+
+	function delete($cid)
+	{
+		$this->db->trans_start();
+
+		$this->db->where('cid', $cid);
+		$this->db->delete('ci_cars');
+		$row = $this->db->affected_rows();
+
+		$this->db->trans_complete();
+
+		if ($this->db->trans_status() === FALSE)
+		{
+			return -1;
+		}
+		elseif ($row < 1)
+		{
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
 	}
 
 }

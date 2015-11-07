@@ -15,9 +15,9 @@ class Ci_d13ht01_model_employees extends CI_Model {
 		$this->load->database();
 	}
 
-	public function add($uset_data, $group_list)
+	public function add($user_data, $group_list)
 	{
-		if (empty($uset_data) || empty($group_list))
+		if (empty($user_data) || empty($group_list))
 		{
 			return 0;
 		}
@@ -26,8 +26,8 @@ class Ci_d13ht01_model_employees extends CI_Model {
 
 		$this->db->trans_start();
 
-		$this->db->insert('ci_users', $uset_data);
-		$new_user = $this->auth->get_user_by_username($uset_data['username']);
+		$this->db->insert('ci_users', $user_data);
+		$new_user = $this->auth->get_user_by_username($user_data['username']);
 
 		$grant = [];
 
@@ -40,6 +40,81 @@ class Ci_d13ht01_model_employees extends CI_Model {
 		}
 
 		$this->db->insert_batch('ci_groups_users', $grant);
+
+		$this->db->trans_complete();
+
+		if ($this->db->trans_status() === FALSE)
+		{
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
+	}
+
+	public function update($uid, $user_data, $new_group)
+	{
+		if (empty($user_data) || empty($new_group))
+		{
+			return 0;
+		}
+
+		$this->load->model('ci_d13ht01_model_auth', 'auth');
+
+		$this->db->trans_start();
+
+		$this->db->where('uid', $uid);
+		$this->db->update('ci_users', $user_data);
+		$new_user = $this->auth->get_user_by_username($user_data['username']);
+
+		$grant		 = [];
+		$revoke		 = [];
+		$group_list	 = [];
+		$old_group	 = $this->auth->get_role_by_uid($uid);
+
+		foreach ($this->get_all_group() as $value)
+		{
+			$group_list[] = $value['gid'];
+		}
+
+		foreach ($group_list as $g)
+		{
+			if (in_array($g, $old_group) && !in_array($g, $new_group))
+			{
+				$revoke[] = [
+					'gid'	 => $g,
+					'uid'	 => $uid
+				];
+			}
+
+			if (!in_array($g, $old_group) && in_array($g, $new_group))
+			{
+				$grant[] = [
+					'gid'	 => $g,
+					'uid'	 => $uid
+				];
+			}
+		}
+
+		if (!empty($grant))
+		{
+			$this->db->insert_batch('ci_groups_users', $grant);
+		}
+
+		if (!empty($revoke))
+		{
+			foreach ($revoke as $value)
+			{
+				$this->db->delete('ci_groups_users', $value);
+			}
+		}
+
+//		print_r($old_group);
+//		print_r($new_group);
+//		print_r($group_list);
+//		print_r($grant);
+//		print_r($revoke);
 
 		$this->db->trans_complete();
 

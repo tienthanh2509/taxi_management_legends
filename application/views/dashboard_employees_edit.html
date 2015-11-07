@@ -20,10 +20,14 @@
 			<!-- BEGIN: Biểu mẫu thêm nhân viên mới -->
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">Thêm nhân viên mới</h3>
+					<h3 class="panel-title">Sửa thông tin của nhân viên</h3>
 				</div>
 				<div class="panel-body">
-					{% include 'layout/form_employees_add.html' %}
+					{% if user_id is empty %}
+					{% include 'layout/form_employees_input_userid.html' %}
+					{% else %}
+					{% include 'layout/form_employees_edit.html' %}
+					{% endif %}
 				</div>
 			</div>
 			<!-- END: Add employees form -->
@@ -44,7 +48,7 @@ $(function(){
 	$('#ci_navbar_' + navbar_id).addClass('active');
 
 	// Cập nhật Sidebar
-	var sidebar_id = 'add';
+	var sidebar_id = 'edit';
 	$('#ci_sidebar_left_employees_view').removeClass('active');
 	$('#ci_sidebar_left_employees_' + sidebar_id).addClass('active');
 });

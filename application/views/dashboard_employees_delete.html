@@ -20,10 +20,20 @@
 			<!-- BEGIN: Biểu mẫu thêm nhân viên mới -->
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">Thêm nhân viên mới</h3>
+					<h3 class="panel-title">Xóa nhân viên</h3>
 				</div>
 				<div class="panel-body">
-					{% include 'layout/form_employees_add.html' %}
+					<div class="alert alert-danger" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4><b><i class="fa fa-exclamation-triangle"></i> Cảnh báo!</b></h4><br>
+						Việc xóa dữ liệu này sẽ xóa hoàn toàn các dữ liệu liên quan, hãy cân nhắc trước khi sử dụng tính năng này!<br>
+						Sử dụng tính năng đình chỉ tài khoản để tránh ảnh hưởng tới các dữ liệu có liên quan tới nhân viên định xóa.
+					</div>
+					{% if user_id is empty %}
+					{% include 'layout/form_employees_input_userid.html' %}
+					{% else %}
+						
+					{% endif %}
 				</div>
 			</div>
 			<!-- END: Add employees form -->
@@ -44,7 +54,7 @@ $(function(){
 	$('#ci_navbar_' + navbar_id).addClass('active');
 
 	// Cập nhật Sidebar
-	var sidebar_id = 'add';
+	var sidebar_id = 'delete';
 	$('#ci_sidebar_left_employees_view').removeClass('active');
 	$('#ci_sidebar_left_employees_' + sidebar_id).addClass('active');
 });

@@ -45,6 +45,22 @@ class Ci_d13ht01_model_auth extends CI_Model {
 		return NULL;
 	}
 
+	function get_role_by_uid($uid)
+	{
+		$this->db->select('gid');
+		$this->db->where('uid', $uid);
+
+		$query = $this->db->get('ci_groups_users');
+
+		$groups = [];
+		foreach ($query->result_array() as $row)
+		{
+			$groups[] = $row['gid'];
+		}
+
+		return $groups;
+	}
+
 	function is_admin($userid)
 	{
 		$this->db->where('gid', 1);

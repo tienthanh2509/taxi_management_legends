@@ -13,6 +13,25 @@ class Car extends Admin_Controller {
 		$this->render('dashboard_car_index');
 	}
 
+	public function ajax_model_list()
+	{
+		$manufacturer = $this->input->post('manufacturer');
+
+		if (!$manufacturer)
+		{
+			show_404();
+		}
+
+		$this->load->model('Ci_d13ht01_model_car', '_car');
+
+		$manufacturer_list = $this->_car->get_model_of_manufacturer($manufacturer);
+		$this->output->set_content_type('json');
+		$this->output->set_output(json_encode([
+			'total'	 => count($manufacturer_list),
+			'rows'	 => $manufacturer_list
+		]));
+	}
+
 	public function ajax_car_catalog()
 	{
 		$page	 = $this->input->post('page') ? $this->input->post('page') : 1;
@@ -36,7 +55,34 @@ class Car extends Admin_Controller {
 
 	public function add()
 	{
-		
+		$this->load->model('Ci_d13ht01_model_car', '_car');
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_error_delimiters('<span>', '</span><br>');
+		$this->form_validation->set_rules('ci_form_license_plate', 'Biển số', 'required|is_unique[ci_cars.license_plate]');
+		//$this->form_validation->set_rules('ci_form_manufacturer', 'Nhà sản xuất', 'required');
+		$this->form_validation->set_rules('ci_form_model', 'Model', 'required');
+
+		if ($this->form_validation->run() === TRUE)
+		{
+			$status = $this->_car->add($this->input->post('ci_form_license_plate'), $this->input->post('ci_form_model'));
+
+			if ($status === 0)
+			{
+				$this->data['error_message'] = 'Không thể thêm xe mới';
+			}
+			else
+			{
+				$this->data['message'] = 'Đã thêm xe mới thành công';
+			}
+		}
+		else
+		{
+			$this->data['error_message'] = validation_errors();
+		}
+
+		$this->data['ci_form']['manufacturer_list'] = $this->_car->get_all_manufacturer();
+		$this->render('dashboard_car_add');
 	}
 
 	public function edit($cid = '')

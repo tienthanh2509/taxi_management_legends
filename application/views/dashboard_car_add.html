@@ -1,0 +1,106 @@
+{# Master Page #}
+{% extends 'system/admin_master_page.html' %}
+
+{% block head %}{{ parent() }}
+<link href="{{ base_url('assets/css/style.css') }}" rel="stylesheet">
+{% endblock %}
+
+{# Phần đầu trang #}
+{% block body_head %}{% include 'layout/admin_body_head.html' %}{% endblock %}
+
+{# Nội dung trang #}
+{% block body_content %}
+<div class="container-fluid">
+	<!-- Stack the columns on mobile by making one half-width and the other full-width -->
+	<div class="row">
+		<div class="col-xs-3 col-md-3">
+			{% include 'layout/car_sidebar_left.html' %}
+		</div>
+		<div class="col-xs-9 col-md-9">
+			<!-- BEGIN: Biểu mẫu thêm xe mới -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Thêm xe mới</h3>
+				</div>
+				<div class="panel-body">
+					{% include 'layout/form_car_add.html' %}
+				</div>
+			</div>
+			<!-- END: Add car form -->
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{# Phần chân trang #}
+{% block body_footer %}{% include 'layout/admin_body_footer.html' %}{% endblock %}
+
+{% block footer %}{{ parent() }}
+<script>
+$(function(){
+	// Cập nhật Navbar
+	var navbar_id = 'car';
+	$('#ci_navbar_home').removeClass('active');
+	$('#ci_navbar_' + navbar_id).addClass('active');
+
+	// Cập nhật Sidebar
+	var sidebar_id = 'add';
+	$('#ci_sidebar_left_car').removeClass('active');
+	$('#ci_sidebar_left_car_' + sidebar_id).addClass('active');
+
+	function update_model(manufacter, set_select)
+	{
+		$.ajax({
+			method: 'post',
+			data: {
+				manufacturer: $('#ci_form_manufacturer').val(),
+			},
+			url: '{{ site_url('car/ajax_model_list') }}',
+			dataType: 'json',
+			success: function (response) {
+				if(response.total > 0)
+				{
+					$('#ci_form_model').removeAttr('disabled');
+					$('#ci_form_model').html('<option value="" selected>--- Chọn ---</option>');
+					$.each(response.rows, function (i, item) {
+						$('#ci_form_model').append($('<option>', {
+							value: item.mid,
+							text : item.name
+						}));
+					});
+					
+					if(set_select)
+					{
+						$('#ci_form_model').val(set_select);
+					}
+				}
+				else
+				{
+					$('#ci_form_model').html('<option value="" selected>--- Chọn ---</option>');
+					$('#ci_form_model').prop('disabled', true);
+				}
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+				$('#ci_form_model').html('<option value="" selected>--- Chọn ---</option>');
+				$('#ci_form_model').prop('disabled', true);
+			}
+		});
+	}
+
+	// Form Helper
+	$('#ci_form_manufacturer').change(function() {
+		var manufacturer = $('#ci_form_manufacturer').val();
+		if(!manufacturer)
+			return false;
+		else
+			update_model(manufacturer)
+	});
+
+	{% if set_value('ci_form_manufacturer') %}
+	// Cập nhật lại trạng thái Model
+	update_model({{ set_value('ci_form_manufacturer') }}, {{ set_value('ci_form_model') }});
+	{% endif %}
+
+});
+</script>
+{% endblock %}

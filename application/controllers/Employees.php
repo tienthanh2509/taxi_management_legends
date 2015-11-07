@@ -167,7 +167,6 @@ class Employees extends Admin_Controller {
 		$this->data['user_id'] = $user_id;
 
 		$this->render('dashboard_employees_edit');
-		$this->output->enable_profiler();
 	}
 
 	public function delete($user_id = '')

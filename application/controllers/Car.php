@@ -99,7 +99,7 @@ class Car extends Admin_Controller {
 
 		if (!$cid)
 		{
-			$this->form_validation->set_rules('ci_form_cid', 'Mã NV', 'required|numeric');
+			$this->form_validation->set_rules('ci_form_cid', 'Mã xe', 'required|numeric');
 			if ($this->form_validation->run() === TRUE)
 			{
 				$this->data['car'] = $this->_car->get_car_by_cid($this->input->post('ci_form_cid'));

@@ -24,11 +24,11 @@ class Schedule extends Admin_Controller {
 		$this->data['min_year']	 = date('Y', $this->data['min_date']);
 		$this->data['max_year']	 = date('Y', $this->data['max_date']);
 
-		$prefs						 = [];
-		$prefs['show_other_days']	 = TRUE;
-		$prefs['template']			 = [
+		$prefs				 = [];
+		//$prefs['show_other_days']	 = TRUE;
+		$prefs['template']	 = [
 			'table_open'			 => '<table class="table table-bordered">',
-			'cal_cell_start_other'	 => '<td class="bg-warning">',
+			//'cal_cell_start_other'	 => '<td class="bg-warning">',
 			'cal_cell_start_today'	 => '<td class="bg-primary">',
 			'week_day_cell'			 => '<td class="bg-primary">{week_day}</td>',
 		];

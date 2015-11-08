@@ -28,38 +28,14 @@
 						</div>
 						<!-- /.col-lg-12 -->
 					</div>
-					<table class="table table-bordered">
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>CN</th>
-							<th>T2</th>
-							<th>T3</th>
-							<th>T4</th>
-							<th>T5</th>
-							<th>T6</th>
-							<th>T7</th>
-						</tr>
-					</thead>
-					<tbody>
-					{% for week in calendar %}
-					<tr>
-						<th scope="row">{{ week.week }}</th>
-						{% for day in week.rows %}
-						{% if day == 'x'%}<td></td>{% else %}<td align="center"><a href="{{ site_url('schedule/details/' ~ sel_year ~ '/' ~ sel_month ~ '/' ~ day) }}">{{ day }}</a></td>{% endif %}
-						{% endfor %}
-					</tr>
-					{% endfor %}
-					</tbody>
-					</table>
+					{{ calendar|raw }}
 				</div>
 				<div class="col-md-4">
 					<div class="panel panel-primary">
 						<div class="panel-heading">
 							<h3 class="panel-title">Tháng</h3>
 						</div>
-						<!--<div class="panel-body">Chọn tháng để hiển thị</div>-->
-						<!-- List group -->
+						<!-- Danh sách tháng trong năm -->
 						<ul id="month-list" class="list-group" style="overflow:scroll; height:250px;">
 							{% for i in 1 .. 12 %}
 							<a href="{{ site_url('schedule/index/' ~ sel_year ~ '/' ~ i) }}" class="list-group-item{% if i == sel_month %} active{% endif %}">{{ i }}</a>
@@ -72,7 +48,7 @@
 							<h3 class="panel-title">Năm</h3>
 						</div>
 						<!--<div class="panel-body">Chọn năm để hiển thị</div>-->
-						<!-- List group -->
+						<!-- Danh sách năm -->
 						<ul class="list-group">
 							{% for i in min_year .. max_year %}
 							<a href="{{ site_url('schedule/index/' ~ i ~ '/' ~ sel_month) }}" class="list-group-item{% if i == sel_year %} active{% endif %}">{{ i }}</a>

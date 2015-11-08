@@ -7,3 +7,7 @@ html {
 label, .control-label, .help-block, .checkbox, .radio {
 	font-size: 14px;
 }
+
+.bg-primary a {
+	color: white;
+}

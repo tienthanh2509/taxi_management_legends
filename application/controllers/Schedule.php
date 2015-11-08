@@ -12,23 +12,37 @@ class Schedule extends Admin_Controller {
 	{
 		$this->load->model('ci_d13ht01_model_schedule', 'model_schedule');
 
-//		echo $this->model_schedule->find_min_date() . PHP_EOL;
-//		echo $this->model_schedule->find_max_date() . PHP_EOL;
-//		print_r($this->model_schedule->calendar_month());
-//		print_r($this->model_schedule->get_schedule_by_week('2015-04-14'));
-//		print_r($this->model_schedule->get_schedule_by_day('2015-04-14'));
+		$year	 = !empty($year) && is_numeric($year) ? $year : date('Y');
+		$month	 = !empty($month) && is_numeric($month) && ($month > 0 && $month <= 12) ? $month : date('m');
 
 		$this->data['min_date']	 = $this->model_schedule->find_min_date();
 		$this->data['max_date']	 = $this->model_schedule->find_max_date();
-		$this->data['sel_year']	 = $year ? $year : date('Y');
-		$this->data['sel_month'] = $month ? $month : date('m');
+		$this->data['max_date']	 = $this->data['max_date'] < time() ? time() : $this->data['max_date'];
+		$this->data['sel_year']	 = $year;
+		$this->data['sel_month'] = $month;
 
 		$this->data['min_year']	 = date('Y', $this->data['min_date']);
-//		$this->data['min_month'] = date('m', $this->data['min_date']);
 		$this->data['max_year']	 = date('Y', $this->data['max_date']);
-//		$this->data['max_month'] = date('m', $this->data['max_date']);
 
-		$this->data['calendar'] = $this->model_schedule->calendar_month($month, $year);
+		$prefs						 = [];
+		$prefs['show_other_days']	 = TRUE;
+		$prefs['template']			 = [
+			'table_open'			 => '<table class="table table-bordered">',
+			'cal_cell_start_other'	 => '<td class="bg-warning">',
+			'cal_cell_start_today'	 => '<td class="bg-primary">',
+			'week_day_cell'			 => '<td class="bg-primary">{week_day}</td>',
+		];
+
+		$this->load->library('calendar', $prefs);
+
+		$data	 = [];
+		$m		 = $this->calendar->get_total_days($month, $year);
+		for ($i = 1; $i < $m; $i++)
+		{
+			$data[$i] = $this->config->site_url('schedule/details/' . $year . '/' . $month . '/' . $i);
+		}
+
+		$this->data['calendar'] = $this->calendar->generate($year, $month, $data);
 
 		$this->render('dashboard_schedule_index');
 	}

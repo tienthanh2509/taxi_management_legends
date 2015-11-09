@@ -47,24 +47,24 @@ class User extends Admin_Controller {
 		$this->load->library('form_validation');
 		$this->form_validation->set_error_delimiters('<span>', '</span><br>');
 
-		$this->form_validation->set_rules('ci_form_car_lp', 'Biển số', 'required|is_unique[ci_cars.car_lp]');
-		$this->form_validation->set_rules('ci_form_model_id', 'Model', 'required');
+		$this->form_validation->set_rules('ci_form_group_name', 'Tên nhóm', 'required|is_unique[ci_groups.group_name]');
+		$this->form_validation->set_rules('ci_form_group_description', 'Ghi chú', '');
 
 		if ($this->form_validation->run() === TRUE)
 		{
 			$data	 = [
-				'car_lp'	 => $this->input->post('ci_form_car_lp'),
-				'model_id'	 => $this->input->post('ci_form_model_id'),
+				'group_name'		 => $this->input->post('ci_form_group_name'),
+				'group_description'	 => $this->input->post('ci_form_group_description'),
 			];
 			$status	 = $this->_g->add($data);
 
 			if ($status === 0)
 			{
-				$this->data['error_message'] = 'Không thể thêm xe mới';
+				$this->data['error_message'] = 'Không thể thêm nhóm mới';
 			}
 			else
 			{
-				$this->data['message'] = 'Đã thêm xe mới thành công';
+				$this->data['message'] = 'Đã thêm nhóm mới thành công';
 			}
 		}
 		else
@@ -77,12 +77,77 @@ class User extends Admin_Controller {
 
 	public function group_edit($group_id = '')
 	{
-		
+		$this->load->library('form_validation');
+		$this->form_validation->set_error_delimiters('<span>', '</span><br>');
+		$this->form_validation->set_rules('ci_form_group_name', 'Tên nhóm', 'required');
+		$this->form_validation->set_rules('ci_form_group_description', 'Ghi chú', '');
+
+		$this->data['group'] = $this->_g->get_by_id($group_id);
+
+		if (empty($this->data['group']))
+		{
+			$this->data['error_message'] = 'Không tìm thấy nhóm nào có mã là: ' . $group_id;
+		}
+		else
+		{
+			if ($this->form_validation->run() === TRUE)
+			{
+				$data	 = [
+					'group_name'		 => $this->input->post('ci_form_group_name'),
+					'group_description'	 => $this->input->post('ci_form_group_description'),
+				];
+				$status	 = $this->_g->update($group_id, $data);
+
+				if ($status === 0)
+				{
+					$this->data['error_message'] = 'Không thể cập nhật thông tin nhóm';
+				}
+				else
+				{
+					$this->data['message'] = 'Đã cập nhật thông tin nhóm thành công';
+				}
+			}
+			else
+			{
+				$this->data['error_message'] = validation_errors();
+			}
+		}
+
+		$this->render('user/group_edit');
 	}
 
 	public function group_delete($group_id = '')
 	{
-		
+		if (!$group_id)
+		{
+			show_404();
+		}
+
+		$this->data['group'] = $this->_g->get_by_id($group_id);
+
+		if (empty($this->data['group']))
+		{
+			show_404();
+		}
+
+		if ($this->input->post('confirm'))
+		{
+			$status = $this->_g->delete($group_id);
+			if ($status == 1)
+			{
+				$this->data['message'] = 'Đã xóa nhóm "' . $this->data['group']['group_name'] . '" thành công!';
+			}
+			elseif ($status == 0)
+			{
+				$this->data['error_message'] = 'Không thể xóa nhóm được yêu cầu!';
+			}
+			else
+			{
+				$this->data['error_message'] = 'Lỗi không xác định, mã lỗi ' . $status;
+			}
+		}
+
+		$this->render('user/group_delete');
 	}
 
 }

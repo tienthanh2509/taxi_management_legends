@@ -122,6 +122,40 @@ class Car extends Admin_Controller {
 		$this->render('car/car_edit');
 	}
 
+	public function car_delete($car_id = '')
+	{
+		if (!$car_id)
+		{
+			show_404();
+		}
+
+		$this->data['car'] = $this->_c->get_by_id($car_id);
+
+		if (empty($this->data['car']))
+		{
+			show_404();
+		}
+
+		if ($this->input->post('confirm'))
+		{
+			$status = $this->_c->delete($car_id);
+			if ($status == 1)
+			{
+				$this->data['message'] = 'Đã xóa xe "' . $this->data['car']['car_lp'] . '" thành công!';
+			}
+			elseif ($status == 0)
+			{
+				$this->data['error_message'] = 'Không thể xóa xe được yêu cầu!';
+			}
+			else
+			{
+				$this->data['error_message'] = 'Lỗi không xác định, mã lỗi ' . $status;
+			}
+		}
+
+		$this->render('car/car_delete');
+	}
+
 	public function model()
 	{
 		$this->data['model_list'] = $this->_cm2->get_all();

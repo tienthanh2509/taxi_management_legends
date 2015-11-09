@@ -33,7 +33,7 @@
 					<li id="ci_navbar_about"><a href="{{ site_url('about') }}"><i class="fa fa-map-signs fa-fw"></i> Giới thiệu</a></li>
 					<li id="ci_navbar_support"><a href="{{ site_url('support') }}"><i class="fa fa-support fa-fw"></i> Hỗ trợ</a></li>
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Chào <b>{{ CI.session.userdata('ci_user') }}</b> <span class="caret"></span></a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Chào <b>{{ CI.session.userdata('user_name') }}</b> <span class="caret"></span></a>
 						<ul class="dropdown-menu">
 							<li><a href="{{ site_url('user/change_password') }}"><i class="fa fa-lock fa-fw"></i> Thay đổi mật khẩu</a></li>
 							<li class="divider"></li>

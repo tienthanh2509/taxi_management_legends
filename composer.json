@@ -1,6 +1,7 @@
 {
     "require": {
         "codeigniter/framework": "^3.0",
-        "twig/twig": "^1.22"
+        "twig/twig": "^1.22",
+        "zendframework/zend-config": "^2.5"
     }
 }

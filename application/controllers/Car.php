@@ -1,71 +1,66 @@
 <?php
 
+/*
+ *  Chương trình quản lý Taxi
+ *  Thiết kế bởi nhóm 1 lớp D13HT01
+ *  Bao gồm các thành viên
+ *  Hoàng Huy, Thái Sơn, Tiến Thành, Thanh Thúy, Thanh Vân
+ */
+
 /**
- * Description of Car
+ * Thao tác với Xe
  *
- * @author phamthanh
- * @property Ci_d13ht01_model_car $_car Model lớp Xe
+ * @author Phạm Tiến Thành <tienthanh.dqc@gmail.com>
+ * @property _cars_manufacturer $_cm Lớp thao tác dữ liệu
+ * @property _cars_model $_cm2 Lớp thao tác dữ liệu
+ * @property _cars $_c Lớp thao tác dữ liệu
  */
 class Car extends Admin_Controller {
 
+	public function __construct()
+	{
+		parent::__construct();
+
+		$this->load->model('_cars_manufacturer', '_cm');
+		$this->load->model('_cars_model', '_cm2');
+		$this->load->model('_cars', '_c');
+	}
+
 	public function index()
 	{
-		$this->render('dashboard_car_index');
+		$page = $this->uri->segment(3, 1);
+
+		$this->data['car_list'] = $this->_c->get_all(30, ($page - 1) * 30);
+
+		$this->load->library('pagination');
+
+		$config['base_url']		 = $this->config->site_url('car/index');
+		$config['total_rows']	 = $this->_c->count_all();
+		$config['per_page']		 = 30;
+		$config['uri_segment']	 = 3;
+
+		$this->pagination->initialize($config);
+
+		$this->data['pagination'] = $this->pagination->create_links();
+
+		$this->render('car/welcome');
 	}
 
-	public function ajax_model_list()
+	public function car_add()
 	{
-		$manufacturer = $this->input->post('manufacturer');
-
-		if (!$manufacturer)
-		{
-			show_404();
-		}
-
-		$this->load->model('Ci_d13ht01_model_car', '_car');
-
-		$manufacturer_list = $this->_car->get_model_of_manufacturer($manufacturer);
-		$this->output->set_content_type('json');
-		$this->output->set_output(json_encode([
-			'total'	 => count($manufacturer_list),
-			'rows'	 => $manufacturer_list
-		]));
-	}
-
-	public function ajax_car_catalog()
-	{
-		$page	 = $this->input->post('page') ? $this->input->post('page') : 1;
-		$rows	 = $this->input->post('rows') ? $this->input->post('rows') : 15;
-		$sort	 = $this->input->post('sort') ? $this->input->post('sort') : 'cid';
-		$order	 = $this->input->post('order') ? $this->input->post('order') : 'asc';
-
-		if (!is_numeric($page) || !is_numeric($rows) || $page < 1 || $rows < 1 || $rows > 50)
-		{
-			show_404();
-		}
-		elseif (!in_array($sort, ['cid', 'license_plate', 'name']) || !in_array($order, ['asc', 'desc']))
-		{
-			show_404();
-		}
-
-		$this->load->model('Ci_d13ht01_model_car', '_car');
-		$danh_muc_xe = $this->_car->car_catalog($rows, (($page - 1) * $rows), $sort, $order);
-		$this->output->set_content_type('json')->append_output(json_encode($danh_muc_xe));
-	}
-
-	public function add()
-	{
-		$this->load->model('Ci_d13ht01_model_car', '_car');
 		$this->load->library('form_validation');
-
 		$this->form_validation->set_error_delimiters('<span>', '</span><br>');
-		$this->form_validation->set_rules('ci_form_license_plate', 'Biển số', 'required|is_unique[ci_cars.license_plate]');
-		//$this->form_validation->set_rules('ci_form_manufacturer', 'Nhà sản xuất', 'required');
-		$this->form_validation->set_rules('ci_form_model', 'Model', 'required');
+
+		$this->form_validation->set_rules('ci_form_car_lp', 'Biển số', 'required|is_unique[ci_cars.car_lp]');
+		$this->form_validation->set_rules('ci_form_model_id', 'Model', 'required');
 
 		if ($this->form_validation->run() === TRUE)
 		{
-			$status = $this->_car->add($this->input->post('ci_form_license_plate'), $this->input->post('ci_form_model'));
+			$data	 = [
+				'car_lp'	 => $this->input->post('ci_form_car_lp'),
+				'model_id'	 => $this->input->post('ci_form_model_id'),
+			];
+			$status	 = $this->_c->add($data);
 
 			if ($status === 0)
 			{
@@ -81,32 +76,40 @@ class Car extends Admin_Controller {
 			$this->data['error_message'] = validation_errors();
 		}
 
-		$this->data['ci_form']['manufacturer_list'] = $this->_car->get_all_manufacturer();
-		$this->render('dashboard_car_add');
+		$this->data['model_list'] = $this->_cm2->get_all();
+		$this->render('car/car_add');
 	}
 
-	public function edit($cid = '')
+	public function car_edit($car_id = '')
 	{
-		$this->load->model('Ci_d13ht01_model_car', '_car');
 		$this->load->library('form_validation');
-
 		$this->form_validation->set_error_delimiters('<span>', '</span><br>');
+		$this->form_validation->set_rules('ci_form_car_lp', 'Biển số', 'required');
+		$this->form_validation->set_rules('ci_form_model_id', 'Model', 'required');
 
-		if (!$cid)
+		$this->data['car'] = $this->_c->get_by_id($car_id);
+
+		if (empty($this->data['car']))
 		{
-			$this->form_validation->set_rules('ci_form_cid', 'Mã xe', 'required|numeric');
+			$this->data['error_message'] = 'Không tìm thấy xe nào có mã là: ' . $car_id;
+		}
+		else
+		{
 			if ($this->form_validation->run() === TRUE)
 			{
-				$this->data['car'] = $this->_car->get_car_by_cid($this->input->post('ci_form_cid'));
+				$data	 = [
+					'car_lp'	 => $this->input->post('ci_form_car_lp'),
+					'model_id'	 => $this->input->post('ci_form_model_id'),
+				];
+				$status	 = $this->_c->update($car_id, $data);
 
-				if (empty($this->data['car']))
+				if ($status === 0)
 				{
-					$this->data['error_message'] = 'Không tìm thấy xe nào có mã là: ' . $this->input->post('ci_form_cid');
+					$this->data['error_message'] = 'Không thể cập nhật thông tin xe';
 				}
 				else
 				{
-					$this->output->set_header('Location: ' . $this->config->site_url('car/edit/' . $this->input->post('ci_form_cid')));
-					return;
+					$this->data['message'] = 'Đã cập nhật thông tin thành công';
 				}
 			}
 			else
@@ -114,148 +117,239 @@ class Car extends Admin_Controller {
 				$this->data['error_message'] = validation_errors();
 			}
 		}
-		else
-		{
-			$this->data['car'] = $this->_car->get_manufacturer_by_cid($cid);
 
-			if (empty($this->data['car']))
-			{
-				$this->data['error_message'] = 'Không tìm thấy xe nào có mã là: ' . $cid;
-			}
-			else
-			{
-				$this->form_validation->set_rules('ci_form_license_plate', 'Biển số', 'required');
-				$this->form_validation->set_rules('ci_form_model', 'Model', 'required');
-
-				if ($this->form_validation->run() === TRUE)
-				{
-					$license_plate	 = $this->input->post('ci_form_license_plate');
-					$model			 = $this->input->post('ci_form_model');
-
-					$status = $this->_car->update($cid, $license_plate, $model);
-
-					if ($status === 0)
-					{
-						$this->data['error_message'] = 'Không thể cập nhật thông tin xe';
-					}
-					else
-					{
-						$this->data['message'] = 'Đã cập nhật thông tin thành công';
-					}
-				}
-				else
-				{
-					$this->data['error_message'] = validation_errors();
-				}
-			}
-			$this->data['ci_form']['manufacturer_list'] = $this->_car->get_all_manufacturer();
-		}
-
-		$this->data['cid'] = $cid;
-
-		$this->render('dashboard_car_edit');
+		$this->data['model_list'] = $this->_cm2->get_all();
+		$this->render('car/car_edit');
 	}
 
-	public function delete($cid = '')
+	public function model()
 	{
-		$this->load->model('Ci_d13ht01_model_car', '_car');
+		$this->data['model_list'] = $this->_cm2->get_all();
+		$this->render('car/model');
+	}
+
+	public function model_add()
+	{
 		$this->load->library('form_validation');
-
 		$this->form_validation->set_error_delimiters('<span>', '</span><br>');
+		$this->form_validation->set_rules('ci_form_manufacturer_id', 'NSX', 'required');
+		$this->form_validation->set_rules('ci_form_model_name', 'Tên mẫu xe', 'required');
 
-		if (!$cid)
+		if ($this->form_validation->run() === TRUE)
 		{
-			$this->form_validation->set_rules('ci_form_cid', 'Mã xe', 'required|numeric');
-			if ($this->form_validation->run() === TRUE)
-			{
-				$this->data['car'] = $this->_car->get_car_by_cid($this->input->post('ci_form_cid'));
-
-				if (empty($this->data['car']))
-				{
-					$this->data['error_message'] = 'Không tìm thấy xe nào có mã là: ' . $this->input->post('ci_form_cid');
-				}
-				else
-				{
-					$this->output->set_header('Location: ' . $this->config->site_url('car/delete/' . $this->input->post('ci_form_cid')));
-					return;
-				}
-			}
-			else
-			{
-				$this->data['error_message'] = validation_errors();
-			}
-		}
-		else
-		{
-			$this->data['car'] = $this->_car->get_car_by_cid($cid);
-
-			if (empty($this->data['car']))
-			{
-				$this->data['error_message'] = 'Không tìm thấy xe nào có mã là: ' . $cid;
-			}
-			elseif ($this->input->post('confirm'))
-			{
-				$status = $this->_car->delete($cid);
-				if ($status == 1)
-				{
-					$this->data['message'] = 'Đã xóa xe thành công!';
-				}
-				elseif ($status == 0)
-				{
-					$this->data['error_message'] = 'Không thể xóa xe được yêu cầu!';
-				}
-				else
-				{
-					$this->data['error_message'] = 'Lỗi không xác định, mã lỗi ' . $status;
-				}
-			}
-		}
-
-		$this->data['cid'] = $cid;
-
-		$this->render('dashboard_car_delete');
-	}
-
-	public function ajax_delete_car()
-	{
-		$this->load->model('Ci_d13ht01_model_car', '_car');
-
-		$cid = $this->input->post('cid');
-
-		if (!$cid)
-		{
-			$output = [
-				'status'	 => -1,
-				'message'	 => 'Dữ liệu đầu vào không hợp lệ!'
+			$data	 = [
+				'model_name'		 => $this->input->post('ci_form_model_name'),
+				'manufacturer_id'	 => $this->input->post('ci_form_manufacturer_id'),
 			];
+			$status	 = $this->_cm2->add($data);
+
+			if ($status === 0)
+			{
+				$this->data['error_message'] = 'Không thể thêm mẫu xe mới';
+			}
+			else
+			{
+				$this->data['message'] = 'Đã thêm mẫu xe mới thành công';
+			}
 		}
 		else
 		{
-			$status = $this->_car->delete($cid);
+			$this->data['error_message'] = validation_errors();
+		}
+
+		$this->data['manufacturer_list'] = $this->_cm->get_all();
+		$this->render('car/model_add');
+	}
+
+	public function model_edit($model_id = '')
+	{
+		if (!$model_id)
+		{
+			show_404();
+		}
+
+		$this->data['model'] = $this->_cm2->get_by_id($model_id);
+
+		if (empty($this->data['model']))
+		{
+			show_404();
+		}
+
+		$this->data['manufacturer_list'] = $this->_cm->get_all();
+
+		$this->load->library('form_validation');
+		$this->form_validation->set_error_delimiters('<span>', '</span><br>');
+		$this->form_validation->set_rules('ci_form_manufacturer_id', 'Tên NSX', 'required');
+		$this->form_validation->set_rules('ci_form_model_name', 'Tên mẫu xe', 'required');
+
+		if ($this->form_validation->run() === TRUE)
+		{
+			$data	 = [
+				'model_name'		 => $this->input->post('ci_form_model_name'),
+				'manufacturer_id'	 => $this->input->post('ci_form_manufacturer_id'),
+			];
+			$status	 = $this->_cm2->update($model_id, $data);
+
+			if ($status === 0)
+			{
+				$this->data['error_message'] = 'Không thể cập nhật thông tin mẫu xe';
+			}
+			else
+			{
+				$this->data['message'] = 'Đã cập nhật thông tin mẫu xe thành công';
+			}
+		}
+		else
+		{
+			$this->data['error_message'] = validation_errors();
+		}
+
+		$this->render('car/model_edit');
+	}
+
+	public function model_delete($model_id = '')
+	{
+		if (!$model_id)
+		{
+			show_404();
+		}
+
+		$this->data['model'] = $this->_cm2->get_by_id($model_id);
+
+		if (empty($this->data['model']))
+		{
+			show_404();
+		}
+
+		if ($this->input->post('confirm'))
+		{
+			$status = $this->_cm2->delete($model_id);
 			if ($status == 1)
 			{
-				$output = [
-					'status'	 => $status,
-					'message'	 => 'Đã xóa xe thành công!'
-				];
+				$this->data['message'] = 'Đã xóa mẫu xe "' . $this->data['model']['model_name'] . '" thành công!';
 			}
 			elseif ($status == 0)
 			{
-				$output = [
-					'status'	 => $status,
-					'message'	 => 'Không thể xóa xe được yêu cầu!'
-				];
+				$this->data['error_message'] = 'Không thể xóa mẫu xe được yêu cầu!';
 			}
 			else
 			{
-				$output = [
-					'status'	 => $status,
-					'message'	 => 'Lỗi không xác định, mã lỗi ' . $status
-				];
+				$this->data['error_message'] = 'Lỗi không xác định, mã lỗi ' . $status;
 			}
 		}
 
-		$this->output->set_content_type('json')->set_output(json_encode($output));
+		$this->render('car/model_delete');
+	}
+
+	public function manufacturer()
+	{
+		$this->data['manufacturer_list'] = $this->_cm->get_all();
+		$this->render('car/manufacturer');
+	}
+
+	public function manufacturer_add()
+	{
+		$this->load->library('form_validation');
+		$this->form_validation->set_error_delimiters('<span>', '</span><br>');
+		$this->form_validation->set_rules('ci_form_manufacturer_name', 'Tên NSX', 'required');
+
+		if ($this->form_validation->run() === TRUE)
+		{
+			$data	 = [
+				'manufacturer_name' => $this->input->post('ci_form_manufacturer_name'),
+			];
+			$status	 = $this->_cm->add($data);
+
+			if ($status === 0)
+			{
+				$this->data['error_message'] = 'Không thể thêm nhà sản xuất mới';
+			}
+			else
+			{
+				$this->data['message'] = 'Đã thêm nhà sản xuất mới thành công';
+			}
+		}
+		else
+		{
+			$this->data['error_message'] = validation_errors();
+		}
+
+		$this->render('car/manufacturer_add');
+	}
+
+	public function manufacturer_edit($manufacturer_id = '')
+	{
+		if (!$manufacturer_id)
+		{
+			show_404();
+		}
+
+		$this->data['manufacturer'] = $this->_cm->get_by_id($manufacturer_id);
+
+		if (empty($this->data['manufacturer']))
+		{
+			show_404();
+		}
+
+		$this->load->library('form_validation');
+		$this->form_validation->set_error_delimiters('<span>', '</span><br>');
+		$this->form_validation->set_rules('ci_form_manufacturer_name', 'Tên NSX', 'required');
+
+		if ($this->form_validation->run() === TRUE)
+		{
+			$data	 = [
+				'manufacturer_name' => $this->input->post('ci_form_manufacturer_name'),
+			];
+			$status	 = $this->_cm->update($manufacturer_id, $data);
+
+			if ($status === 0)
+			{
+				$this->data['error_message'] = 'Không thể cập nhật thông tin nhà sản xuất';
+			}
+			else
+			{
+				$this->data['message'] = 'Đã cập nhật thông tin nhà sản xuất thành công';
+			}
+		}
+		else
+		{
+			$this->data['error_message'] = validation_errors();
+		}
+		$this->render('car/manufacturer_edit');
+	}
+
+	public function manufacturer_delete($manufacturer_id = '')
+	{
+		if (!$manufacturer_id)
+		{
+			show_404();
+		}
+
+		$this->data['manufacturer'] = $this->_cm->get_by_id($manufacturer_id);
+
+		if (empty($this->data['manufacturer']))
+		{
+			show_404();
+		}
+
+		if ($this->input->post('confirm'))
+		{
+			$status = $this->_cm->delete($manufacturer_id);
+			if ($status == 1)
+			{
+				$this->data['message'] = 'Đã xóa nhà sản xuất "' . $this->data['manufacturer']['manufacturer_name'] . '" thành công!';
+			}
+			elseif ($status == 0)
+			{
+				$this->data['error_message'] = 'Không thể xóa nsx xe được yêu cầu!';
+			}
+			else
+			{
+				$this->data['error_message'] = 'Lỗi không xác định, mã lỗi ' . $status;
+			}
+		}
+
+		$this->render('car/manufacturer_delete');
 	}
 
 }

@@ -2,11 +2,17 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+/*
+ *  Chương trình quản lý Taxi
+ *  Thiết kế bởi nhóm 1 lớp D13HT01
+ *  Bao gồm các thành viên
+ *  Hoàng Huy, Thái Sơn, Tiến Thành, Thanh Thúy, Thanh Vân
+ */
+
 /**
- * core/MY_Controller.php
+ * Mở rộng lớp CI_Controller
  *
- * Default application controller
- *
+ * @author Phạm Tiến Thành <tienthanh.dqc@gmail.com>
  */
 class CI_D13HT01 extends CI_Controller {
 
@@ -21,6 +27,8 @@ class CI_D13HT01 extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
+
+		$this->load->driver('session');
 
 		$this->data = [];
 
@@ -48,7 +56,7 @@ class CI_D13HT01 extends CI_Controller {
 		];
 
 		$this->data['error_message'] = '';
-		$this->data['CI'] = &get_instance();
+		$this->data['CI']			 = &get_instance();
 	}
 
 	/**
@@ -78,22 +86,13 @@ class CI_D13HT01 extends CI_Controller {
 }
 
 /**
- * @property Ion_auth $ion_auth
- * @property Ion_auth_model $ion_auth_model
+ * @property Ci_groups_users_model $_groups_users
  */
 class Admin_Controller extends CI_D13HT01 {
 
 	function __construct()
 	{
 		parent::__construct();
-
-		$this->load->driver('session');
-
-		if (!$this->session->userdata('ci_user'))
-		{
-			$this->render('login');
-			exit($this->output->get_output());
-		}
 	}
 
 }

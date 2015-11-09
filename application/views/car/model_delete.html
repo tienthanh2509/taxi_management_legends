@@ -1,0 +1,60 @@
+{#
+Chương trình quản lý Taxi
+Thiết kế bởi nhóm 1 lớp D13HT01
+Bao gồm các thành viên
+Hoàng Huy, Thái Sơn, Tiến Thành, Thanh Thúy, Thanh Vân
+#}
+
+{# Master Page #}
+{% extends 'system/admin_master_page.html' %}
+
+{% block head %}{{ parent() }}
+<link href="{{ base_url('assets/css/style.css') }}" rel="stylesheet">
+{% endblock %}
+
+{# Phần đầu trang #}
+{% block body_head %}{% include 'layout/admin_body_head.html' %}{% endblock %}
+
+{# Nội dung trang #}
+{% block body_content %}
+<div class="container-fluid">
+	<!-- Stack the columns on mobile by making one half-width and the other full-width -->
+	<div class="row">
+		<div class="col-xs-3 col-md-3">
+			{% include 'car/layout/navbar.html' %}
+		</div>
+		<div class="col-xs-9 col-md-9">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Xóa thông tin xe</h3>
+			</div>
+			<div class="panel-body">
+			<div class="alert alert-danger" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4><b><i class="fa fa-exclamation-triangle"></i> Cảnh báo!</b></h4><br>
+				Việc xóa dữ liệu này sẽ xóa hoàn toàn các dữ liệu liên quan, hãy cân nhắc trước khi sử dụng tính năng này!
+			</div>
+			{% include 'car/layout/form_model_delete.html' %}
+			</div>
+		</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{# Phần chân trang #}
+{% block body_footer %}{% include 'layout/admin_body_footer.html' %}{% endblock %}
+
+{% block footer %}{{ parent() }}
+<script>
+	$(function () {
+		// Cập nhật Navbar
+		var navbar_id = 'car';
+		var navbar_pills_id = 'model';
+		$('#ci_navbar_home').removeClass('active');
+		$('#ci_navbar_' + navbar_id).addClass('active');
+		$('#nav-pills-car').removeClass('active');
+		$('#nav-pills-' + navbar_pills_id).addClass('active');
+	});
+</script>
+{% endblock %}

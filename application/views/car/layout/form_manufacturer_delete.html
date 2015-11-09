@@ -1,0 +1,53 @@
+{#
+Chương trình quản lý Taxi
+Thiết kế bởi nhóm 1 lớp D13HT01
+Bao gồm các thành viên
+Hoàng Huy, Thái Sơn, Tiến Thành, Thanh Thúy, Thanh Vân
+#}
+<form class="form-horizontal" method="post">
+	{% if message %}
+	<div class="alert alert-success" role="alert">
+		<span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+		<span class="sr-only">Thông báo:</span>
+		{{ message|raw }}
+		
+		<br>
+		<button class="btn btn-success" type="button" onclick="window.history.back();"><i class="fa fa-backward fa-fw"></i> Quay lại</button>
+	</div>
+	{% elseif error_message %}
+	<div class="alert alert-danger" role="alert">
+		<span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+		<span class="sr-only">Lỗi:</span>
+		{{ error_message|raw }}
+		<br>
+		<button class="btn btn-success" type="button" onclick="window.history.back();"><i class="fa fa-backward fa-fw"></i> Quay lại</button>
+	</div>
+	{% else %}
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="ci_form_manufacturer_id" class="col-sm-4 control-label">Mã NSX <span class="text-danger">*</span></label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" id="ci_form_manufacturer_id" value="{{ manufacturer.manufacturer_id }}" readonly>
+					<p class="help-block"></p>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="ci_form_manufacturer_name" class="col-sm-4 control-label">Tên hãng sản xuất <span class="text-danger">*</span></label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" id="ci_form_manufacturer_name" value="{{ manufacturer.manufacturer_name }}" readonly>
+					<p class="help-block"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-offset-3 col-sm-8">
+			<input type="hidden" name="confirm" value="1">
+			<button class="btn btn-success" type="button" onclick="window.history.back();"><i class="fa fa-backward fa-fw"></i> Quay lại</button>
+			<button class="btn btn-danger" type="submit"><i class="fa fa-arrow-circle-o-right"></i> Tiếp tục</button>
+		</div>
+	</div>
+	{% endif %}
+</form>

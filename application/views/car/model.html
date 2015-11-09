@@ -1,0 +1,79 @@
+{#
+Chương trình quản lý Taxi
+Thiết kế bởi nhóm 1 lớp D13HT01
+Bao gồm các thành viên
+Hoàng Huy, Thái Sơn, Tiến Thành, Thanh Thúy, Thanh Vân
+#}
+
+{# Master Page #}
+{% extends 'system/admin_master_page.html' %}
+
+{% block head %}{{ parent() }}
+<link href="{{ base_url('assets/css/style.css') }}" rel="stylesheet">
+{% endblock %}
+
+{# Phần đầu trang #}
+{% block body_head %}{% include 'layout/admin_body_head.html' %}{% endblock %}
+
+{# Nội dung trang #}
+{% block body_content %}
+<div class="container-fluid">
+	<!-- Stack the columns on mobile by making one half-width and the other full-width -->
+	<div class="row">
+		<div class="col-xs-3 col-md-3">
+			{% include 'car/layout/navbar.html' %}
+		</div>
+		<div class="col-xs-9 col-md-7">
+			<a class="btn btn-success" href="{{ site_url('car/model_add') }}"><i class="fa fa-plus"></i> Thêm</a>
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>Mã</th>
+						<th>Tên mẫu xe</th>
+						<th>Mã NSX</th>
+						<th>Tên NSX</th>
+						<th>Thao tác</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% if model_list is empty %}
+					<tr>
+						<td colspan="5"><p class="text-center">Không có dữ liệu!</p></td>
+					</tr>
+					{% else %}
+					{% for m in model_list %}
+					<tr>
+						<th scope="row">{{ m.model_id }}</th>
+						<td>{{ m.model_name }}</td>
+						<td>{{ m.manufacturer_id }}</td>
+						<td>{{ m.manufacturer_name }}</td>
+						<td>
+							<a href="{{ site_url('car/model_edit/' ~ m.model_id) }}">Sửa</a>
+							<a href="{{ site_url('car/model_delete/' ~ m.model_id) }}">Xóa</a>
+						</td>
+					</tr>
+					{% endfor %}
+					{% endif %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{# Phần chân trang #}
+{% block body_footer %}{% include 'layout/admin_body_footer.html' %}{% endblock %}
+
+{% block footer %}{{ parent() }}
+<script>
+$(function(){
+	// Cập nhật Navbar
+	var navbar_id = 'car';
+	var navbar_pills_id = 'model';
+	$('#ci_navbar_home').removeClass('active');
+	$('#ci_navbar_' + navbar_id).addClass('active');
+	$('#nav-pills-car').removeClass('active');
+	$('#nav-pills-' + navbar_pills_id).addClass('active');
+});
+</script>
+{% endblock %}

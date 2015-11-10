@@ -26,7 +26,7 @@ Hoàng Huy, Thái Sơn, Tiến Thành, Thanh Thúy, Thanh Vân
 		<div class="col-xs-9 col-md-9">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">Xóa nhóm</h3>
+				<h3 class="panel-title">Xóa nhân viên</h3>
 			</div>
 			<div class="panel-body">
 			<div class="alert alert-danger" role="alert">
@@ -34,7 +34,7 @@ Hoàng Huy, Thái Sơn, Tiến Thành, Thanh Thúy, Thanh Vân
 				<h4><b><i class="fa fa-exclamation-triangle"></i> Cảnh báo!</b></h4><br>
 				Việc xóa dữ liệu này sẽ xóa hoàn toàn các dữ liệu liên quan, hãy cân nhắc trước khi sử dụng tính năng này!
 			</div>
-			{% include 'user/layout/form_group_delete.html' %}
+			{% include 'user/layout/form_user_delete.html' %}
 			</div>
 		</div>
 		</div>
@@ -50,7 +50,7 @@ Hoàng Huy, Thái Sơn, Tiến Thành, Thanh Thúy, Thanh Vân
 $(function () {
 	// Cập nhật Navbar
 	var navbar_id = 'user';
-	var navbar_pills_id = 'group';
+	var navbar_pills_id = 'user';
 	$('#ci_navbar_home').removeClass('active');
 	$('#ci_navbar_' + navbar_id).addClass('active');
 	$('#nav-pills-user').removeClass('active');

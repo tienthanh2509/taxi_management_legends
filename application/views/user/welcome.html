@@ -1,0 +1,95 @@
+{#
+Chương trình quản lý Taxi
+Thiết kế bởi nhóm 1 lớp D13HT01
+Bao gồm các thành viên
+Hoàng Huy, Thái Sơn, Tiến Thành, Thanh Thúy, Thanh Vân
+#}
+
+{# Master Page #}
+{% extends 'system/admin_master_page.html' %}
+
+{% block head %}{{ parent() }}
+<link href="{{ base_url('assets/css/style.css') }}" rel="stylesheet">
+{% endblock %}
+
+{# Phần đầu trang #}
+{% block body_head %}{% include 'layout/admin_body_head.html' %}{% endblock %}
+
+{# Nội dung trang #}
+{% block body_content %}
+<div class="container-fluid">
+	<!-- Stack the columns on mobile by making one half-width and the other full-width -->
+	<div class="row">
+		<div class="col-xs-3 col-md-3">
+			{% include 'user/layout/navbar.html' %}
+		</div>
+		<div class="col-xs-9 col-md-9">
+			<div class="pull-right">{{ pagination|raw }}</div>
+			<a class="btn btn-success" href="{{ site_url('user/user_add') }}"><i class="fa fa-plus"></i> Thêm</a>
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>Mã NV</th>
+						<th>Tài khoản</th>
+						<th>Email</th>
+						<th>Họ</th>
+						<th>Tên</th>
+						<th>Ngày sinh</th>
+						<th>Giới tính</th>
+						<th>SĐT</th>
+						<th>Nhóm</th>
+						<th>Tình trạng</th>
+						<th>Thao tác</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% if user_list is empty %}
+					<tr>
+						<td colspan="11"><p class="text-center">Không có dữ liệu!</p></td>
+					</tr>
+					{% else %}
+					{% for m in user_list %}
+					<tr>
+						<th scope="row">{{ m.user_id }}</th>
+						<td>{{ m.user_name }}</td>
+						<td>{{ m.user_email }}</td>
+						<td>{{ m.user_ln }}</td>
+						<td>{{ m.user_fn }}</td>
+						<td>{{ m.user_bd }}</td>
+						<td>{{ m.user_gender == 0 ? 'Nam' : (m.user_gender == 1 ? 'Nữ' : 'N/a') }}</td>
+						<td>{{ m.user_phone }}</td>
+						<td>{{ m.group_name }}</td>
+						<td>{{ m.user_active == 1 ? 'OK' : 'Đ/C' }}</td>
+						<td>
+							<a href="{{ site_url('user/user_edit/' ~ m.user_id) }}">Sửa</a>
+							<a href="{{ site_url('user/user_delete/' ~ m.user_id) }}">Xóa</a>
+						</td>
+					</tr>
+					{% endfor %}
+					{% endif %}
+				</tbody>
+			</table>
+
+			{{ pagination|raw }}
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{# Phần chân trang #}
+{% block body_footer %}{% include 'layout/admin_body_footer.html' %}{% endblock %}
+
+{% block footer %}{{ parent() }}
+<script>
+$(function () {
+	// Cập nhật Navbar
+	var navbar_id = 'user';
+	var navbar_pills_id = 'user';
+	$('#ci_navbar_home').removeClass('active');
+	$('#ci_navbar_' + navbar_id).addClass('active');
+	$('#nav-pills-user').removeClass('active');
+	$('#nav-pills-' + navbar_pills_id).addClass('active');
+});
+
+</script>
+{% endblock %}

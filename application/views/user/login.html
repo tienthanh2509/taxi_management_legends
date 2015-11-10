@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Đăng nhập vào hệ thống</title>
+
+	<!-- Pace -->
+	<script src="{{ base_url('vendor/bower/PACE/pace.min.js') }}"></script>
+	<link href="{{ base_url('vendor/bower/PACE/themes/blue/pace-theme-minimal.css') }}" rel="stylesheet">
+
+	<!-- Bootstrap -->
+	<link href="{{ base_url('vendor/bower/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+
+	<!-- Font Awesome -->
+	<link href="{{ base_url('vendor/bower/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+
+	<!-- Custom CSS -->
+	<link href="assets/css/login.css" rel="stylesheet">
+</head>
+
+<body>
+	<div class="container" id="wrap">
+		<h4 class="text-center">Đăng nhập vào hệ thống.</h4>
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2">
+				<div id="validation-errors" style="display:none"></div>
+				<div class="panel panel-default">
+
+					<div class="panel-body" id="success">
+						<div class="row">
+							<div class="col-md-offset-1 col-md-8">
+								<form class="form-horizontal" action="{{ site_url('user/login') }}" method="post" id="login" role="form">
+									<div class="form-group">
+										<label for="username" class="col-sm-4 control-label">Tên tài khoản</label>
+										<div class="col-sm-8">
+											<input type="text" name="username" class="form-control" id="username" placeholder="Tên tài khoản">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="password" class="col-sm-4 control-label">Mật khẩu</label>
+										<div class="col-sm-8">
+											<input type="password" name="password" class="form-control" id="password" placeholder="Mật khẩu">
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-offset-4 col-sm-8">
+											<button data-loading-text="Đang xử lý..." type="submit" id="btn-login" class="btn btn-default btn-primary"><i class="fa fa-sign-in"></i> Đăng nhập</button>
+											<div class="pull-right">
+												<ul class="list-unstyled">
+													<li><a href="{{ site_url('support/faq') }}">Câu hỏi thường gặp?</a></li>
+													<li><a href="{{ site_url('user/forgotinfo?next=' ~ current_url()|url_encode) }}">Bạn quên mật khẩu?</a></li>
+												</ul>
+
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- Đặt load javascript ở cuối trang để tải trang nhanh hơn -->
+	<script src="{{ base_url('vendor/bower/jquery/dist/jquery.min.js') }}"></script>
+	<script src="{{ base_url('vendor/bower/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+	<script>
+		$(function() {
+			$('form').on('submit', function(e) {
+				e.preventDefault;
+				var btn = $('#btn-login');
+				btn.button('loading');
+				$.ajax({
+					type: 'post',
+					url: $('form#login').attr('action'),
+					cache: false,
+					dataType: 'json',
+					data: $('form#login').serialize(),
+					beforeSend: function() {
+						$('#validation-errors').hide().empty();
+					},
+					success: function(data) {
+						if (data.status === 1) {
+							$('#success').html('<div class="alert alert-success">Đăng nhập thành công! Hệ thống sẽ chuyển hướng bạn đến bảng điều khiển...<div>');
+							window.location.href = "{{ site_url() }}";
+						} else if(data.status === -1) {
+							$('#validation-errors').append('<div class="alert alert-danger"><strong>' + data.message + ' <span>Hãy đợi <i class="fa fa-circle-o-notch fa-spin"></i> <span id="secField">' + data.timeout + '</span> giây...</span></strong><div>');
+							$('#validation-errors').show();
+
+							btn.attr('disabled', true);;
+							var Timeout = data.timeout;
+							var timeBegin = new Date();
+							var msBegin = timeBegin.getTime();
+							timerID = setInterval(function () {
+								var timeCurrent = new Date();
+								var msCurrent = timeCurrent.getTime();
+								var ms = Math.round((msCurrent - msBegin) / 1000);
+								document.getElementById('secField').innerHTML = Timeout - ms;
+								if (Timeout <= ms)
+								{
+									btn.removeAttr('disabled');
+									$('#validation-errors').hide();
+								}
+							}, 1000);
+
+						} else {
+							$('#validation-errors').append('<div class="alert alert-danger"><strong>' + data.message + '</strong><div>');
+							$('#validation-errors').show();
+						}
+					},
+					error: function(xhr, textStatus, thrownError) {
+						$('#validation-errors').append('<div class="alert alert-danger"><strong>Có lỗi gì đó đã xảy ra, hãy thử lại...</strong><div>');
+						$('#validation-errors').show();
+						btn.button('reset');
+					}
+				});
+				btn.button('reset');
+				return false;
+			});
+		});
+	</script>
+</body>
+</html>

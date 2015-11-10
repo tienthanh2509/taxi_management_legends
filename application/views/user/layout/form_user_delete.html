@@ -1,0 +1,122 @@
+{#
+Chương trình quản lý Taxi
+Thiết kế bởi nhóm 1 lớp D13HT01
+Bao gồm các thành viên
+Hoàng Huy, Thái Sơn, Tiến Thành, Thanh Thúy, Thanh Vân
+#}
+<form class="form-horizontal" method="post">
+	{% if message %}
+	<div class="alert alert-success" role="alert">
+		<span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+		<span class="sr-only">Thông báo:</span>
+		{{ message|raw }}
+	</div>
+	{% elseif error_message %}
+	<div class="alert alert-danger" role="alert">
+		<span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+		<span class="sr-only">Lỗi:</span>
+		{{ error_message|raw }}
+	</div>
+	{% else %}
+	<div class="row">
+		<!-- BEGIN: Thông tin tài khoản -->
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="ci_form_user_name" class="col-sm-4 control-label">Tên tài khoản <span class="text-danger">*</span></label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" id="ci_form_user_name" name="ci_form_user_name" value="{{ user.user_name }}" readonly>
+					<p class="help-block"></p>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="ci_form_user_password" class="col-sm-4 control-label">Mật khẩu <span class="text-danger">*</span></label>
+				<div class="col-sm-8">
+					<input type="password" class="form-control" id="ci_form_user_password" name="ci_form_user_password" value="******************************" readonly>
+					<p class="help-block">Để trổng để không thay đổi mật khẩu</p>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="ci_form_user_email" class="col-sm-4 control-label">Email</label>
+				<div class="col-sm-8">
+					<input type="email" class="form-control" id="ci_form_user_email" name="ci_form_user_email" value="{{ user.user_email }}" readonly>
+					<p class="help-block"></p>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="ci_form_user_phone" class="col-sm-4 control-label">Số điện thoại</label>
+				<div class="col-sm-8">
+					<input type="tel" class="form-control" id="ci_form_user_phone" name="ci_form_user_phone" value="{{ user.user_phone }}" readonly>
+					<p class="help-block"></p>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="ci_form_group" class="col-sm-4 control-label">Nhóm người dùng <span class="text-danger">*</span></label>
+				<div class="col-sm-8">
+					<select class="form-control" id="ci_form_group" name="ci_form_group[]" multiple="multiple" disabled> 
+						{% for group in ci_form_user_groups %}
+						{% if group.grant == true %}
+						<option value="{{ group.group_id }}" selected>{{ group.group_name }}</option>
+						{% else %}
+						<option value="{{ group.group_id }}">{{ group.group_name }}</option>
+						{% endif %}
+						{% endfor %}
+					</select>
+					<p class="help-block"></p>
+				</div>
+			</div>
+		</div>
+		<!-- END: Thông tin tài khoản -->
+
+		<!-- BEGIN: Thông tin cá nhân -->
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="ci_form_user_ln" class="col-sm-4 control-label">Họ và tên đệm</label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" id="ci_form_user_ln" name="ci_form_user_ln" value="{{ user.user_ln }}" readonly>
+					<p class="help-block"></p>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="ci_form_user_fn" class="col-sm-4 control-label">Tên <span class="text-danger">*</span></label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" id="ci_form_user_fn" name="ci_form_user_fn" value="{{ user.user_fn }}" readonly>
+					<p class="help-block"></p>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="ci_form_user_gender" class="col-sm-4 control-label">Giới tính <span class="text-danger">*</span></label>
+				<div class="col-sm-8">
+					<select class="form-control" id="ci_form_user_gender" name="ci_form_user_gender" disabled> 
+						<option value="0"{{ set_select('ci_form_user_gender', '0', user.user_gender == 0) }}>Nam</option>
+						<option value="1"{{ set_select('ci_form_user_gender', '1', user.user_gender == 1) }}>Nữ</option>
+						<option value="2"{{ set_select('ci_form_user_gender', '2', user.user_gender == 2) }}>N/a</option>
+					</select>
+					<p class="help-block"></p>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="ci_form_user_bd" class="col-sm-4 control-label">Ngày sinh <span class="text-danger">*</span></label>
+				<div class="col-sm-8">
+					<input type="date" class="form-control" id="ci_form_user_bd" name="ci_form_user_bd" value="{{ user.user_bd }}" readonly>
+					<p class="help-block"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- END: Thông tin cá nhân -->
+	<div class="form-group">
+		<div class="col-sm-offset-3 col-sm-8">
+			<input type="hidden" name="confirm" value="1">
+			<button class="btn btn-success" type="button" onclick="window.history.back();"><i class="fa fa-backward fa-fw"></i> Quay lại</button>
+			<button class="btn btn-danger" type="submit"><i class="fa fa-arrow-circle-o-right"></i> Tiếp tục</button>
+		</div>
+	</div>
+	{% endif %}
+</form>

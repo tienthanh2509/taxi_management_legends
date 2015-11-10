@@ -93,6 +93,12 @@ class Admin_Controller extends CI_D13HT01 {
 	function __construct()
 	{
 		parent::__construct();
+
+		if (!$this->session->userdata('user_name') && $this->uri->uri_string() != 'user/login')
+		{
+			$this->render('user/login');
+			exit($this->output->get_output());
+		}
 	}
 
 }

@@ -24,6 +24,11 @@ class _cars_model extends CI_Model {
 		return $this->db->get('view_cars_model')->result_array();
 	}
 
+	public function count_all()
+	{
+		return $this->db->count_all('view_cars_model');
+	}
+
 	public function get_by_id($model_id)
 	{
 		$this->db->where('model_id', $model_id);

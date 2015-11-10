@@ -35,6 +35,11 @@ class _cars_manufacturer extends CI_Model {
 			return $data[0];
 	}
 
+	public function count_all()
+	{
+		return $this->db->count_all('ci_cars_manufacturer');
+	}
+
 	public function add($param)
 	{
 		$this->db->trans_start();

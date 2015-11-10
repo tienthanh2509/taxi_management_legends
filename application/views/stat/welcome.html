@@ -1,0 +1,95 @@
+{#
+Chương trình quản lý Taxi
+Thiết kế bởi nhóm 1 lớp D13HT01
+Bao gồm các thành viên
+Hoàng Huy, Thái Sơn, Tiến Thành, Thanh Thúy, Thanh Vân
+#}
+
+{# Master Page #}
+{% extends 'system/admin_master_page.html' %}
+
+{% block head %}{{ parent() }}
+<link href="{{ base_url('assets/css/style.css') }}" rel="stylesheet">
+{% endblock %}
+
+{# Phần đầu trang #}
+{% block body_head %}{% include 'layout/admin_body_head.html' %}{% endblock %}
+
+{# Nội dung trang #}
+{% block body_content %}
+<div class="container-fluid">
+	<!-- Stack the columns on mobile by making one half-width and the other full-width -->
+	<div class="row">
+		<div class="col-xs-3 col-md-3">
+			{% include 'stat/layout/navbar.html' %}
+		</div>
+		<div class="col-xs-9 col-md-9">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Nhân viên</h3>
+						</div>
+						<div class="panel-body">
+							<p>Tổng số: {{ count_user }}</p>
+							<p>Tổng số nhóm: {{ count_group }}</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Xe</h3>
+						</div>
+						<div class="panel-body">
+							<p>Tổng số xe: {{ count_car }}</p>
+							<p>Tổng số mẫu xe: {{ count_model }}</p>
+							<p>Tổng số NSX: {{ count_manufacturer }}</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Chuyến đi</h3>
+						</div>
+						<div class="panel-body">
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Doanh thu</h3>
+						</div>
+						<div class="panel-body">
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{# Phần chân trang #}
+{% block body_footer %}{% include 'layout/admin_body_footer.html' %}{% endblock %}
+
+{% block footer %}{{ parent() }}
+<script>
+$(function () {
+	// Cập nhật Navbar
+	var navbar_id = 'stat';
+	var navbar_pills_id = 'stat';
+	$('#ci_navbar_home').removeClass('active');
+	$('#ci_navbar_' + navbar_id).addClass('active');
+	$('#nav-pills-stat').removeClass('active');
+	$('#nav-pills-' + navbar_pills_id).addClass('active');
+});
+
+</script>
+{% endblock %}
